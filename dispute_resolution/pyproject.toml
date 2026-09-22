@@ -1,0 +1,42 @@
+[project]
+name = "dispute-resolution-agent"
+version = "0.1.0"
+description = "GenAI dispute resolution and negotiation agent for accounts-receivable short payments"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "langchain-core>=0.3",
+    "chromadb>=0.5",
+    "sqlparse>=0.5",
+    "pypdf>=4.2",
+    "fpdf2>=2.7",
+    "jinja2>=3.1",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.1"]
+openai = ["openai>=1.30"]
+anthropic = ["anthropic>=0.30"]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+dra = "dra.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["dra*"]
+
+[tool.setuptools.package-data]
+dra = ["rag/contract_sources/*.md", "api/templates/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
