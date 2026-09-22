@@ -7,6 +7,7 @@ serialisable and therefore auditable.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from enum import StrEnum
 from typing import Literal
 
@@ -40,6 +41,15 @@ class Severity(StrEnum):
 
     def de_escalate(self, steps: int = 1) -> Severity:
         return Severity.from_rank(self.rank - steps)
+
+
+def max_severity(severities: Iterable[Severity], default: Severity = Severity.NONE) -> Severity:
+    """Highest severity by rank.
+
+    ``Severity`` is a ``StrEnum``, so the builtin ``max`` would compare the
+    member *strings* and rank "none" above "critical". Always use this instead.
+    """
+    return max(severities, key=lambda s: s.rank, default=default)
 
 
 _SEVERITY_ORDER: tuple[Severity, ...] = (
@@ -634,7 +644,8 @@ class RiskAssessment(BaseModel):
     country_risk_tier: int
     industry_risk_tier: int
     overall_severity: Severity
-    proposed_notches: int
+    #: Fractional so quarter-notch contributions from tiering are not lost.
+    proposed_notches: float
     blockers: list[str] = Field(default_factory=list)
     narrative: list[NarrativePoint] = Field(default_factory=list)
     retrieval_backend: str = "unknown"

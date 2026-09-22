@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Iterator
+from dataclasses import dataclass
 
 from .models import EvidenceItem, EvidenceKind
 
@@ -26,8 +27,15 @@ _NUMBER_RE = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-#: Tokens that look numeric but are never underwriting facts worth citing.
-_IGNORED_NUMERIC_CONTEXT = re.compile(r"\b(FY|Q[1-4]|20\d{2}|grade|tier|net)\b", re.IGNORECASE)
+#: Period labels and calendar dates are references, not measured facts, so they
+#: are removed before extraction rather than tested against evidence.
+_PERIOD_TOKENS = re.compile(
+    r"(\d{4}-\d{2}-\d{2}|\bFY\s?\d{4}\b|\bQ[1-4]\s?\d{0,4}\b|\bH[12]\s?\d{0,4}\b)",
+    re.IGNORECASE,
+)
+
+#: Labels that precede an ordinal rather than a quantity.
+_ORDINAL_CONTEXT = re.compile(r"\b(grade|tier|net|band|naics|sic)\b[\s:]*$", re.IGNORECASE)
 
 
 class EvidenceRegistry:
@@ -131,49 +139,74 @@ class EvidenceRegistry:
 _SUFFIX_MULTIPLIER = {"k": 1_000.0, "m": 1_000_000.0, "b": 1_000_000_000.0}
 
 
-def extract_numbers(text: str) -> list[float]:
+@dataclass(frozen=True)
+class ClaimedNumber:
+    """A number asserted in prose, with the tolerance its own precision implies.
+
+    "$2.11m" is written to two decimals of a million, so anything within $5,000
+    supports it; "60 days" is written to the whole day, so anything within half a
+    day supports it. Deriving the tolerance from how the number was written is
+    what lets the check be strict without flagging ordinary rounding.
+    """
+
+    value: float
+    tolerance: float
+    text: str
+
+    def is_supported_by(self, supported: Iterable[float]) -> bool:
+        for candidate in supported:
+            if abs(self.value - candidate) <= self.tolerance:
+                return True
+            # Prose may state a percentage where the fact is stored as a fraction.
+            if abs(self.value - candidate * 100) <= self.tolerance:
+                return True
+            if abs(self.value * 100 - candidate) <= self.tolerance * 100:
+                return True
+        return False
+
+
+def extract_numbers(text: str) -> list[ClaimedNumber]:
     """Pull citable numeric assertions out of claim prose.
 
-    Years, fiscal-period labels and grade/tier ordinals are skipped: they are
-    labels rather than measured facts, and requiring evidence for "FY2025" would
-    make the check noisy without making the memo more trustworthy.
+    Calendar dates, fiscal-period labels, and grade/tier ordinals are dropped:
+    they are references rather than measured facts, so requiring evidence for
+    "FY2025" would make the check noisy without making the memo more trustworthy.
     """
-    found: list[float] = []
-    for match in _NUMBER_RE.finditer(text):
+    cleaned = _PERIOD_TOKENS.sub(" ", text)
+    found: list[ClaimedNumber] = []
+    for match in _NUMBER_RE.finditer(cleaned):
         raw_digits = match.group("digits")
         suffix = (match.group("suffix") or "").strip().lower()
-        prefix = text[max(0, match.start() - 8) : match.start()]
-        if _IGNORED_NUMERIC_CONTEXT.search(prefix) and not suffix:
+        prefix = cleaned[max(0, match.start() - 12) : match.start()]
+        if not suffix and _ORDINAL_CONTEXT.search(prefix):
             continue
+
         value = float(raw_digits.replace(",", ""))
-        if suffix in _SUFFIX_MULTIPLIER:
-            value *= _SUFFIX_MULTIPLIER[suffix]
+        # Half of the last written digit is the rounding the author accepted.
+        decimals = len(raw_digits.split(".")[1]) if "." in raw_digits else 0
+        tolerance = 0.5 * (10.0**-decimals)
+
+        multiplier = _SUFFIX_MULTIPLIER.get(suffix)
+        if multiplier is not None:
+            value *= multiplier
+            tolerance *= multiplier
+
         if match.group("paren") or match.group("sign") == "-":
             value = -value
-        # A bare 4-digit integer in the 1900-2100 range is a year, not a fact.
-        if not suffix and 1900 <= value <= 2100 and "," not in raw_digits and "." not in raw_digits:
+
+        # A bare 4-digit integer in calendar range is a year, not a quantity.
+        if (
+            not suffix
+            and decimals == 0
+            and "," not in raw_digits
+            and 1900 <= abs(value) <= 2100
+        ):
             continue
-        found.append(value)
+
+        found.append(ClaimedNumber(value=value, tolerance=tolerance, text=match.group(0).strip()))
     return found
 
 
-def numbers_match(claimed: float, supported: Iterable[float]) -> bool:
-    """Tolerant comparison that accounts for rounding in prose.
-
-    A memo that says "4.9x" is supported by a stored 4.9019..., and "$1.25m" is
-    supported by 1_250_000. Percentages stored as 13.0 also match a claim of 13.
-    """
-    for value in supported:
-        if _close(claimed, value):
-            return True
-        # Prose may state a percentage that is stored as a fraction, or vice versa.
-        if _close(claimed, value * 100) or _close(claimed * 100, value):
-            return True
-    return False
-
-
-def _close(a: float, b: float) -> bool:
-    scale = max(abs(a), abs(b), 1.0)
-    # 0.6% relative tolerance covers 2-significant-figure rounding such as
-    # 4.90x printed for 4.9019x, without matching genuinely different numbers.
-    return abs(a - b) <= max(0.006 * scale, 0.005)
+def numbers_match(claimed: float, supported: Iterable[float], tolerance: float = 0.005) -> bool:
+    """Convenience wrapper for comparing a bare float against evidence values."""
+    return ClaimedNumber(claimed, tolerance, str(claimed)).is_supported_by(supported)

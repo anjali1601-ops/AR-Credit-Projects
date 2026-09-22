@@ -12,7 +12,7 @@ recorded and surfaces in the memo as a data-quality finding.
 
 from __future__ import annotations
 
-from ..evidence import EvidenceRegistry
+from ..evidence import EvidenceRegistry, extract_numbers
 from ..models import (
     AuditOpinion,
     CreditApplication,
@@ -138,6 +138,14 @@ def _register_application_evidence(
         source,
         display_value=f"{application.years_in_business:.0f} years",
         numeric_values=[float(application.years_in_business)],
+    )
+    registry.register(
+        "app:purpose",
+        EvidenceKind.APPLICATION_FIELD,
+        "Stated purpose of the facility",
+        source,
+        display_value=application.purpose,
+        numeric_values=[n.value for n in extract_numbers(application.purpose)],
     )
     registry.register(
         "app:industry",

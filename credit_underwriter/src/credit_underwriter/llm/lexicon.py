@@ -109,8 +109,8 @@ ADVERSE_LEXICON: tuple[LexiconEntry, ...] = (
     # concentration
     LexiconEntry("single-customer concentration", RiskCategory.CONCENTRATION, Severity.MODERATE),
     LexiconEntry("concentration", RiskCategory.CONCENTRATION, Severity.MODERATE),
-    # trade payment
-    LexiconEntry("days beyond terms", RiskCategory.TRADE_PAYMENT, Severity.MODERATE),
+    # trade payment ("days beyond terms" is handled by QUANTIFIED_RULES, because
+    # 2 days beyond terms and 46 days beyond terms are not the same signal)
     LexiconEntry("past due", RiskCategory.TRADE_PAYMENT, Severity.MODERATE),
     LexiconEntry("deteriorating", RiskCategory.TRADE_PAYMENT, Severity.MODERATE),
     LexiconEntry("reduced or withdrawn open-account lines", RiskCategory.TRADE_PAYMENT, Severity.HIGH),
@@ -138,6 +138,52 @@ SUPPORTIVE_LEXICON: tuple[LexiconEntry, ...] = (
     LexiconEntry("fully performing", RiskCategory.POSITIVE_MOMENTUM, Severity.NONE, Direction.SUPPORTIVE),
     LexiconEntry("below the manufacturing average", RiskCategory.INDUSTRY, Severity.NONE, Direction.SUPPORTIVE),
 )
+
+@dataclass(frozen=True)
+class QuantifiedRule:
+    """A phrase whose severity depends on the number attached to it."""
+
+    pattern: str
+    category: RiskCategory
+    #: Ascending thresholds mapped to severity; the last band at or below the
+    #: measured value wins.
+    bands: tuple[tuple[float, Severity], ...]
+    label: str
+
+
+#: Payment slippage is only meaningful with its magnitude, so it is read as a
+#: number rather than as a keyword.
+QUANTIFIED_RULES: tuple[QuantifiedRule, ...] = (
+    QuantifiedRule(
+        pattern=r"(\d+(?:\.\d+)?)\s*days beyond terms",
+        category=RiskCategory.TRADE_PAYMENT,
+        bands=(
+            (30.0, Severity.HIGH),
+            (15.0, Severity.MODERATE),
+            (8.0, Severity.LOW),
+            (0.0, Severity.NONE),
+        ),
+        label="days beyond terms",
+    ),
+)
+
+_QUANTIFIED_PATTERNS: dict[str, re.Pattern[str]] = {
+    rule.pattern: re.compile(rule.pattern, re.IGNORECASE) for rule in QUANTIFIED_RULES
+}
+
+#: Systemic sources cannot evidence an obligor-level event. An industry report
+#: noting that "sector insolvency rates are below average" must not be read as
+#: an insolvency finding against the applicant, so adverse matches from these
+#: document types are restricted to categories the source can actually speak to.
+DOC_TYPE_ALLOWED_CATEGORIES: dict[str, frozenset[RiskCategory]] = {
+    "industry_report": frozenset(
+        {RiskCategory.INDUSTRY, RiskCategory.OPERATIONS, RiskCategory.CONCENTRATION}
+    ),
+    "country_report": frozenset({RiskCategory.COUNTRY, RiskCategory.REGULATORY}),
+    "trade_reference": frozenset(
+        {RiskCategory.TRADE_PAYMENT, RiskCategory.PAYMENT_DEFAULT}
+    ),
+}
 
 #: Cues that flip an adverse match off. Checked in the text immediately before a match.
 NEGATION_CUES: tuple[str, ...] = (
@@ -216,7 +262,7 @@ def _is_negated(text: str, start: int) -> bool:
 
 
 def find_matches(text: str) -> list[LexiconMatch]:
-    """All non-negated lexicon hits in ``text``."""
+    """All non-negated lexicon and quantified-rule hits in ``text``."""
     matches: list[LexiconMatch] = []
     for entry in (*ADVERSE_LEXICON, *SUPPORTIVE_LEXICON):
         pattern = _PHRASE_PATTERNS[entry.phrase]
@@ -232,6 +278,35 @@ def find_matches(text: str) -> list[LexiconMatch]:
                     position=m.start(),
                 )
             )
+
+    for rule in QUANTIFIED_RULES:
+        for m in _QUANTIFIED_PATTERNS[rule.pattern].finditer(text):
+            value = float(m.group(1))
+            severity = next(
+                (sev for threshold, sev in rule.bands if value >= threshold), Severity.NONE
+            )
+            if severity is Severity.NONE:
+                # Comfortably inside terms is a supportive payment signal.
+                matches.append(
+                    LexiconMatch(
+                        phrase=f"{value:g} {rule.label}",
+                        category=rule.category,
+                        severity=Severity.NONE,
+                        direction=Direction.SUPPORTIVE,
+                        position=m.start(),
+                    )
+                )
+                continue
+            matches.append(
+                LexiconMatch(
+                    phrase=f"{value:g} {rule.label}",
+                    category=rule.category,
+                    severity=severity,
+                    direction=Direction.ADVERSE,
+                    position=m.start(),
+                )
+            )
+
     return sorted(matches, key=lambda m: (m.position, m.phrase))
 
 
@@ -258,7 +333,13 @@ def classify(text: str, doc_type: str) -> Classification:
     and the word "unpaid" once is filed as litigation rather than as a default.
     """
     matches = find_matches(text)
-    adverse = [m for m in matches if m.direction is Direction.ADVERSE]
+    allowed = DOC_TYPE_ALLOWED_CATEGORIES.get(doc_type)
+    adverse = [
+        m
+        for m in matches
+        if m.direction is Direction.ADVERSE
+        and (allowed is None or m.category in allowed)
+    ]
     supportive = [m for m in matches if m.direction is Direction.SUPPORTIVE]
 
     if not adverse:

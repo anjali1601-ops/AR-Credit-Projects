@@ -204,8 +204,14 @@ _MEMO_TEMPLATES: dict[str, str] = {
         "giving {limit}."
     ),
     "conflict": (
-        "The specialists disagreed on {subject}: the financial analyst found {financial_position} "
-        "while the risk searcher found {risk_position}. Applying {rule}, {resolution}"
+        "The specialists disagreed on {subject}: the financial analyst found that "
+        "{financial_position}, while the risk searcher found that {risk_position}. Applying "
+        "{rule}, {resolution}."
+    ),
+    "concurrence": (
+        "On {subject} the two specialists were aligned: the financial analyst reported "
+        "{financial_position}, and the risk searcher reported {risk_position}. Applying {rule}, "
+        "{resolution}."
     ),
 }
 

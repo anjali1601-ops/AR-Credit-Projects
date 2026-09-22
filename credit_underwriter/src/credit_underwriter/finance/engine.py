@@ -8,7 +8,7 @@ it; it never recomputes or restates a number.
 
 from __future__ import annotations
 
-from ..evidence import EvidenceRegistry
+from ..evidence import EvidenceRegistry, extract_numbers
 from ..models import (
     AuditOpinion,
     CreditApplication,
@@ -432,13 +432,21 @@ def derive_findings(
 
     if registry is not None:
         for finding in findings:
+            # A finding is the citable source for its own assertion: it also
+            # carries the policy threshold it was tested against, which is not a
+            # statement line and so lives nowhere else in the registry. Its
+            # ``inputs`` keep the chain down to the underlying ratios walkable.
             registry.register(
                 f"finding:financial:{finding.key}",
                 EvidenceKind.COMPUTED_SIGNAL,
                 f"Financial finding — {finding.key.replace('_', ' ')}",
                 source="Financial engine policy threshold test",
                 display_value=finding.statement,
-                detail=f"severity={finding.severity.value}, direction={finding.direction.value}",
+                detail=(
+                    f"severity={finding.severity.value}, direction={finding.direction.value}, "
+                    f"derived from {', '.join(finding.evidence_ids)}"
+                ),
+                numeric_values=[n.value for n in extract_numbers(finding.statement)],
             )
 
     return findings
