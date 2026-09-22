@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{% block title %}Dispute Desk{% endblock %}</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --panel: #141b31;
+    --panel-2: #1b2340;
+    --line: #29314f;
+    --text: #e8ecf8;
+    --muted: #98a2c0;
+    --accent: #6ea8fe;
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 700px at 12% -10%, #1a2b4d 0%, transparent 60%), var(--bg);
+    color: var(--text);
+    font: 15px/1.55 ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.top {
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: baseline;
+    justify-content: space-between;
+    padding: 22px 28px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #121a32, #0d1324);
+  }
+  header.top h1 { font-size: 19px; margin: 0; letter-spacing: .2px; }
+  header.top .sub { color: var(--muted); font-size: 13px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 20px 72px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 26px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+  .card .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .07em; }
+  .card .value { font-size: 25px; font-weight: 650; margin-top: 6px; }
+  section { margin-bottom: 30px; }
+  h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 0 0 12px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--panel-2); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill {
+    display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--muted); white-space: nowrap;
+  }
+  .pill.ok { color: var(--ok); border-color: #1f5136; background: #10251b; }
+  .pill.bad { color: var(--bad); border-color: #5a2a2a; background: #251313; }
+  .pill.warn { color: var(--warn); border-color: #5b4520; background: #241c0d; }
+  .pill.info { color: var(--accent); border-color: #274070; background: #111c33; }
+  .btn {
+    display: inline-block; padding: 9px 15px; border-radius: 9px; font-size: 14px; font-weight: 600;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--text);
+  }
+  .btn:hover { text-decoration: none; border-color: var(--accent); }
+  .btn.approve { background: #11301f; border-color: #235e3b; color: #b6f3ce; }
+  .btn.reject { background: #2b1414; border-color: #6a2e2e; color: #f6c0c0; }
+  .muted { color: var(--muted); }
+  .mono, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
+  pre {
+    background: #0a0f1f; border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 0;
+  }
+  .empty { padding: 34px 18px; text-align: center; color: var(--muted); }
+  .flex { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .grid-2 { display: grid; grid-template-columns: 1.35fr .9fr; gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } th.hide, td.hide { display: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1><a href="/" style="color:inherit">Acme Supply Co. · Dispute Desk</a></h1>
+    <div class="sub">{% block subtitle %}Ingestion, Auditor and Negotiation agents working AR short payments{% endblock %}</div>
+  </div>
+  <div class="flex">
+    <span class="pill info">{% block context %}{% endblock %}</span>
+    <a class="btn" href="/docs">API docs</a>
+  </div>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

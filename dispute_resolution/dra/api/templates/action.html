@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }} · Dispute Desk{% endblock %}
+{% block subtitle %}Supervisor decision{% endblock %}
+{% block context %}one-click approval{% endblock %}
+
+{% block content %}
+<div class="panel" style="padding:34px 30px; max-width:720px; margin:40px auto; text-align:center">
+  <div class="pill {{ 'ok' if tone == 'ok' else 'warn' }}" style="font-size:13px">{{ title }}</div>
+  <h2 style="text-transform:none; letter-spacing:0; color:var(--text); font-size:20px; margin:18px 0 10px">
+    {{ message }}
+  </h2>
+  <div class="flex" style="justify-content:center; margin-top:22px">
+    {% if case_id %}<a class="btn" href="/cases/{{ case_id }}">Open the case</a>{% endif %}
+    <a class="btn" href="/">Back to the dispute desk</a>
+  </div>
+</div>
+{% endblock %}

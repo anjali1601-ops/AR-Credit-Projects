@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% macro money(v) %}{% if v %}${{ '{:,.2f}'.format(v) }}{% else %}—{% endif %}{% endmacro %}
+{% macro state_pill(state) %}
+  {%- if state == 'resolved' -%}<span class="pill ok">resolved</span>
+  {%- elif state == 'rejected' -%}<span class="pill bad">rejected</span>
+  {%- elif state == 'awaiting_approval' -%}<span class="pill warn">awaiting approval</span>
+  {%- else -%}<span class="pill">{{ state.replace('_', ' ') }}</span>{%- endif -%}
+{% endmacro %}
+
+{% block context %}LLM: {{ settings.llm_provider }} · {{ 'SQLite' if settings.is_sqlite else 'PostgreSQL' }} · {{ settings.vector_store }}{% endblock %}
+
+{% block content %}
+<div class="cards">
+  <div class="card"><div class="label">Open cases</div><div class="value">{{ cases | length }}</div></div>
+  <div class="card"><div class="label">Awaiting approval</div><div class="value" style="color:var(--warn)">{{ awaiting }}</div></div>
+  <div class="card"><div class="label">Amount in dispute</div><div class="value">{{ money(disputed_total) }}</div></div>
+  <div class="card"><div class="label">Credit pending sign-off</div><div class="value" style="color:var(--ok)">{{ money(open_credit) }}</div></div>
+</div>
+
+<section>
+  <h2>Dispute cases</h2>
+  <div class="panel">
+    {% if cases %}
+    <table>
+      <thead>
+        <tr>
+          <th>Case</th><th>Customer</th><th class="hide">Invoice</th><th>Reason</th>
+          <th class="num">Claimed</th><th>Ruling</th><th>State</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for c in cases %}
+        <tr>
+          <td><a href="/cases/{{ c.id }}"><strong>{{ c.case_number }}</strong></a></td>
+          <td>{{ c.customer_name or '—' }}</td>
+          <td class="hide mono">{{ c.invoice_number or '—' }}</td>
+          <td>{{ (c.reason_code or '').replace('_', ' ') }}</td>
+          <td class="num">{{ money(c.disputed_amount) }}</td>
+          <td>
+            {% if c.decision == 'valid' %}<span class="pill ok">valid · {{ money(c.approved_credit_amount) }}</span>
+            {% elif c.decision == 'invalid' %}<span class="pill bad">invalid</span>
+            {% elif c.decision %}<span class="pill warn">needs info</span>
+            {% else %}<span class="pill">pending</span>{% endif %}
+          </td>
+          <td>{{ state_pill(c.state) }}</td>
+          <td class="num"><a href="/cases/{{ c.id }}">Review →</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">
+      <p><strong>No cases yet.</strong></p>
+      <p>Seed the demo inbox with <span class="mono">python -m dra seed</span>, then
+         <span class="mono">POST /api/inbox/poll</span> — or just wait for the poller.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section>
+  <h2>Simulated inbox</h2>
+  <div class="panel">
+    {% if messages %}
+    <table>
+      <thead>
+        <tr><th>From</th><th>Subject</th><th class="hide">Received</th><th>Triage</th></tr>
+      </thead>
+      <tbody>
+      {% for m in messages %}
+        <tr>
+          <td>{{ m.sender_name or m.sender }}<div class="muted mono" style="font-size:12px">{{ m.sender }}</div></td>
+          <td>{{ m.subject }}<div class="muted" style="font-size:12.5px">{{ m.note }}</div></td>
+          <td class="hide muted mono">{{ m.received_at.strftime('%d %b %H:%M') }}</td>
+          <td>
+            {% if m.status == 'processed' %}<span class="pill ok">case opened</span>
+            {% elif m.status == 'skipped' %}<span class="pill">not a dispute</span>
+            {% elif m.status == 'failed' %}<span class="pill bad">failed</span>
+            {% else %}<span class="pill warn">unread</span>{% endif %}
+            {% if m.case_id %}<div style="margin-top:5px"><a href="/cases/{{ m.case_id }}">view case</a></div>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">The inbox is empty. Run <span class="mono">python -m dra seed</span>.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

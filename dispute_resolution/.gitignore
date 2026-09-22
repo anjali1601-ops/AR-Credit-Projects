@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# Runtime artifacts: SQLite database, generated contract PDFs, Chroma index.
+var/
+.env
