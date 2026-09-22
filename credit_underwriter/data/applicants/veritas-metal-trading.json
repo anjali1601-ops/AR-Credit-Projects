@@ -1,0 +1,162 @@
+{
+  "applicant_id": "veritas-metal-trading",
+  "legal_name": "Veritas Metal Trading S.A.",
+  "trading_name": "Veritas Metals",
+  "entity_type": "Société Anonyme",
+  "country": "Republic of Zubrowka",
+  "country_code": "ZB",
+  "industry": "Metals trading & distribution",
+  "industry_code": "NAICS-423510",
+  "years_in_business": 4,
+  "employees": 58,
+  "currency": "USD",
+  "requested_limit": 1200000,
+  "requested_terms_days": 60,
+  "purpose": "Open-account purchases of copper and aluminium semi-finished product for resale.",
+  "submitted_at": "2026-09-15",
+  "prior_relationship_months": 0,
+  "prior_worst_days_beyond_terms": null,
+  "statements": [
+    {
+      "fiscal_year": 2023,
+      "period_end": "2023-12-31",
+      "currency": "USD",
+      "opinion": "management_prepared",
+      "income_statement": {
+        "revenue": 71400000,
+        "cost_of_goods_sold": 66100000,
+        "operating_expenses": 3700000,
+        "depreciation_amortization": 510000,
+        "interest_expense": 980000,
+        "income_tax_expense": 26000
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 980000,
+        "accounts_receivable": 11800000,
+        "inventory": 8900000,
+        "other_current_assets": 560000,
+        "net_property_plant_equipment": 3100000,
+        "intangible_assets": 2600000,
+        "other_non_current_assets": 540000,
+        "accounts_payable": 14200000,
+        "short_term_debt": 8900000,
+        "other_current_liabilities": 1600000,
+        "long_term_debt": 2720000,
+        "other_non_current_liabilities": 0,
+        "total_equity": 1060000
+      },
+      "cash_flow": {
+        "cash_from_operations": 210000,
+        "capital_expenditures": 300000,
+        "dividends_and_distributions": 0
+      }
+    },
+    {
+      "fiscal_year": 2024,
+      "period_end": "2024-12-31",
+      "currency": "USD",
+      "opinion": "management_prepared",
+      "income_statement": {
+        "revenue": 96200000,
+        "cost_of_goods_sold": 90300000,
+        "operating_expenses": 4200000,
+        "depreciation_amortization": 580000,
+        "interest_expense": 1420000,
+        "income_tax_expense": 0
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 690000,
+        "accounts_receivable": 15900000,
+        "inventory": 11200000,
+        "other_current_assets": 720000,
+        "net_property_plant_equipment": 3400000,
+        "intangible_assets": 2600000,
+        "other_non_current_assets": 600000,
+        "accounts_payable": 17600000,
+        "short_term_debt": 10900000,
+        "other_current_liabilities": 2050000,
+        "long_term_debt": 3800000,
+        "other_non_current_liabilities": 0,
+        "total_equity": 760000
+      },
+      "cash_flow": {
+        "cash_from_operations": -450000,
+        "capital_expenditures": 420000,
+        "dividends_and_distributions": 0
+      }
+    },
+    {
+      "fiscal_year": 2025,
+      "period_end": "2025-12-31",
+      "currency": "USD",
+      "opinion": "management_prepared",
+      "income_statement": {
+        "revenue": 88500000,
+        "cost_of_goods_sold": 84100000,
+        "operating_expenses": 4050000,
+        "depreciation_amortization": 620000,
+        "interest_expense": 1840000,
+        "income_tax_expense": 0
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 420000,
+        "accounts_receivable": 14600000,
+        "inventory": 9800000,
+        "other_current_assets": 780000,
+        "net_property_plant_equipment": 3200000,
+        "intangible_assets": 2600000,
+        "other_non_current_assets": 640000,
+        "accounts_payable": 16900000,
+        "short_term_debt": 11400000,
+        "other_current_liabilities": 2300000,
+        "long_term_debt": 2100000,
+        "other_non_current_liabilities": 690000,
+        "total_equity": -1350000
+      },
+      "cash_flow": {
+        "cash_from_operations": -1900000,
+        "capital_expenditures": 350000,
+        "dividends_and_distributions": 0
+      }
+    }
+  ],
+  "trade_references": [
+    {
+      "supplier_name": "Halberd Copper Works",
+      "relationship_years": 3,
+      "high_credit": 1400000,
+      "terms": "Net 60",
+      "days_beyond_terms": 46,
+      "comment": "Balance is materially past due; account referred to a collection agency in July 2026."
+    },
+    {
+      "supplier_name": "Zubrowka Aluminium Mill",
+      "relationship_years": 2,
+      "high_credit": 900000,
+      "terms": "Net 45",
+      "days_beyond_terms": 38,
+      "comment": "Shipments suspended pending payment of arrears."
+    }
+  ],
+  "customer_concentration": [
+    { "customer_name": "Grand Meridian Construction", "percent_of_revenue": 44.0, "contract_expiry": "2027-03-31" },
+    { "customer_name": "Zubrowka State Rail Authority", "percent_of_revenue": 22.0, "contract_expiry": null },
+    { "customer_name": "Lutz & Sons Fabrication", "percent_of_revenue": 8.0, "contract_expiry": null }
+  ],
+  "credit_enhancements": [
+    {
+      "key": "veritas-personal-guarantee",
+      "kind": "personal_guarantee",
+      "description": "Founder has offered a personal guarantee; no verified statement of net worth has been provided.",
+      "offsets_categories": []
+    }
+  ],
+  "disclosures": {
+    "material_litigation": false,
+    "prior_insolvency_or_bankruptcy": false,
+    "covenant_breach_last_24m": false,
+    "tax_or_regulatory_penalties": false,
+    "change_of_control_pending": false,
+    "notes": "Applicant states there are no pending claims and that all supplier balances are current."
+  }
+}

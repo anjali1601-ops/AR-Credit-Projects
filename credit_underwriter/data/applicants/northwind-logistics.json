@@ -1,0 +1,192 @@
+{
+  "applicant_id": "northwind-logistics",
+  "legal_name": "Northwind Logistics Group LLC",
+  "trading_name": "Northwind Freight",
+  "entity_type": "Limited Liability Company",
+  "country": "United States",
+  "country_code": "US",
+  "industry": "Truckload freight & regional distribution",
+  "industry_code": "NAICS-484121",
+  "years_in_business": 9,
+  "employees": 640,
+  "currency": "USD",
+  "requested_limit": 500000,
+  "requested_terms_days": 45,
+  "purpose": "Fuel, tyres and maintenance parts purchased across a 310-tractor fleet.",
+  "submitted_at": "2026-09-11",
+  "prior_relationship_months": 48,
+  "prior_worst_days_beyond_terms": 11,
+  "statements": [
+    {
+      "fiscal_year": 2023,
+      "period_end": "2023-12-31",
+      "currency": "USD",
+      "opinion": "reviewed",
+      "income_statement": {
+        "revenue": 58200000,
+        "cost_of_goods_sold": 47400000,
+        "operating_expenses": 6600000,
+        "depreciation_amortization": 1700000,
+        "interest_expense": 860000,
+        "income_tax_expense": 385000
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 1900000,
+        "accounts_receivable": 8600000,
+        "inventory": 280000,
+        "other_current_assets": 500000,
+        "net_property_plant_equipment": 15600000,
+        "intangible_assets": 1600000,
+        "other_non_current_assets": 450000,
+        "accounts_payable": 4700000,
+        "short_term_debt": 3100000,
+        "other_current_liabilities": 1380000,
+        "long_term_debt": 12900000,
+        "other_non_current_liabilities": 1395000,
+        "total_equity": 5455000
+      },
+      "cash_flow": {
+        "cash_from_operations": 3450000,
+        "capital_expenditures": 2900000,
+        "dividends_and_distributions": 0
+      }
+    },
+    {
+      "fiscal_year": 2024,
+      "period_end": "2024-12-31",
+      "currency": "USD",
+      "opinion": "reviewed",
+      "income_statement": {
+        "revenue": 66900000,
+        "cost_of_goods_sold": 55300000,
+        "operating_expenses": 7150000,
+        "depreciation_amortization": 1840000,
+        "interest_expense": 1020000,
+        "income_tax_expense": 375000
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 1640000,
+        "accounts_receivable": 10300000,
+        "inventory": 300000,
+        "other_current_assets": 570000,
+        "net_property_plant_equipment": 16900000,
+        "intangible_assets": 1500000,
+        "other_non_current_assets": 480000,
+        "accounts_payable": 5300000,
+        "short_term_debt": 3500000,
+        "other_current_liabilities": 1520000,
+        "long_term_debt": 13900000,
+        "other_non_current_liabilities": 1150000,
+        "total_equity": 6320000
+      },
+      "cash_flow": {
+        "cash_from_operations": 3900000,
+        "capital_expenditures": 2600000,
+        "dividends_and_distributions": 350000
+      }
+    },
+    {
+      "fiscal_year": 2025,
+      "period_end": "2025-12-31",
+      "currency": "USD",
+      "opinion": "reviewed",
+      "income_statement": {
+        "revenue": 62400000,
+        "cost_of_goods_sold": 52100000,
+        "operating_expenses": 7050000,
+        "depreciation_amortization": 1960000,
+        "interest_expense": 1180000,
+        "income_tax_expense": 26000
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 1180000,
+        "accounts_receivable": 9900000,
+        "inventory": 320000,
+        "other_current_assets": 610000,
+        "net_property_plant_equipment": 17800000,
+        "intangible_assets": 1400000,
+        "other_non_current_assets": 520000,
+        "accounts_payable": 5600000,
+        "short_term_debt": 3900000,
+        "other_current_liabilities": 1650000,
+        "long_term_debt": 13200000,
+        "other_non_current_liabilities": 1180000,
+        "total_equity": 6200000
+      },
+      "cash_flow": {
+        "cash_from_operations": 2400000,
+        "capital_expenditures": 3100000,
+        "dividends_and_distributions": 204000
+      }
+    }
+  ],
+  "trade_references": [
+    {
+      "supplier_name": "Midland Fuel Partners",
+      "relationship_years": 6,
+      "high_credit": 480000,
+      "terms": "Net 30",
+      "days_beyond_terms": 9,
+      "comment": "Generally pays in 38-40 days; slower during the 2025 freight downturn but never placed for collection."
+    },
+    {
+      "supplier_name": "Ironline Tire & Service",
+      "relationship_years": 4,
+      "high_credit": 265000,
+      "terms": "Net 45",
+      "days_beyond_terms": 14,
+      "comment": "Two 15-day slips in the last twelve months, both cured after a call."
+    },
+    {
+      "supplier_name": "Crosswind Parts Distribution",
+      "relationship_years": 5,
+      "high_credit": 190000,
+      "terms": "Net 30",
+      "days_beyond_terms": 6,
+      "comment": "Acceptable; communicates proactively when payment will be late."
+    }
+  ],
+  "customer_concentration": [
+    { "customer_name": "Cascade Grocers Cooperative", "percent_of_revenue": 31.0, "contract_expiry": "2029-01-31" },
+    { "customer_name": "Bayline Home Retail", "percent_of_revenue": 14.0, "contract_expiry": "2027-06-30" },
+    { "customer_name": "Summit Beverage Distribution", "percent_of_revenue": 9.0, "contract_expiry": "2027-02-28" },
+    { "customer_name": "Harbor Point Paper", "percent_of_revenue": 5.0, "contract_expiry": null }
+  ],
+  "credit_enhancements": [
+    {
+      "key": "northwind-parent-guarantee",
+      "kind": "parent_guarantee",
+      "description": "Unconditional guarantee from Northwind Holdings Ltd (audited FY2025 equity of $41.2m, net debt/EBITDA 1.4x).",
+      "coverage_amount": 500000,
+      "offsets_categories": ["insolvency", "payment_default", "industry"]
+    },
+    {
+      "key": "northwind-credit-insurance",
+      "kind": "credit_insurance",
+      "description": "Trade credit insurance binder covering 80% of approved exposure, Aurora Trade Credit policy TC-88421.",
+      "coverage_percent": 80.0,
+      "offsets_categories": ["payment_default", "insolvency"]
+    },
+    {
+      "key": "northwind-security-deposit",
+      "kind": "security_deposit",
+      "description": "Applicant has offered a $75,000 cash security deposit held against the account.",
+      "coverage_amount": 75000,
+      "offsets_categories": ["payment_default", "trade_payment"]
+    },
+    {
+      "key": "northwind-payment-history",
+      "kind": "payment_history",
+      "description": "Four years of direct trading history with a worst-ever position of 11 days beyond terms and no write-offs.",
+      "offsets_categories": ["trade_payment", "payment_default"]
+    }
+  ],
+  "disclosures": {
+    "material_litigation": true,
+    "prior_insolvency_or_bankruptcy": false,
+    "covenant_breach_last_24m": true,
+    "tax_or_regulatory_penalties": false,
+    "change_of_control_pending": false,
+    "notes": "Disclosed: a subcontractor contract dispute (approximately $240k claimed) and a Q1 2026 fixed-charge covenant test miss for which the lender granted a written waiver."
+  }
+}

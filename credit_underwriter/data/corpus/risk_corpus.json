@@ -1,0 +1,229 @@
+{
+  "corpus_id": "synthetic-risk-corpus-v1",
+  "disclaimer": "Every document below is synthetic and was written for this demo. The companies, publications, courts, and the Republic of Zubrowka do not exist. Nothing here describes any real organisation.",
+  "documents": [
+    {
+      "doc_id": "news-atlas-001",
+      "title": "Atlas Precision Works lands multi-year aerostructures award",
+      "source": "Midwest Manufacturing Review (synthetic)",
+      "doc_type": "news",
+      "published_date": "2026-04-18",
+      "applicant_id": "atlas-precision-works",
+      "country_code": "US",
+      "industry_code": "NAICS-332710",
+      "text": "Atlas Precision Works has been named a tier-two supplier on a multi-year aerostructures program, an award the company says adds to an already record backlog. Management described the contract as a renewal and expansion of an existing relationship with Kestrel Aerostructures rather than a new customer, and said the work is priced with an indexed raw-material pass-through clause. The company confirmed it will fund the associated tooling from operating cash flow and existing equipment facilities."
+    },
+    {
+      "doc_id": "news-atlas-002",
+      "title": "Atlas Precision opens second machining cell, adds 40 roles",
+      "source": "Regional Business Journal (synthetic)",
+      "doc_type": "news",
+      "published_date": "2026-02-09",
+      "applicant_id": "atlas-precision-works",
+      "country_code": "US",
+      "industry_code": "NAICS-332710",
+      "text": "Atlas Precision Works commissioned a second machining cell this month and is hiring forty additional machinists and inspectors. The expansion was funded without new borrowing. Local suppliers interviewed for this article said Atlas pays within terms and described the company as one of the more reliable accounts in the region."
+    },
+    {
+      "doc_id": "filing-atlas-001",
+      "title": "Secretary of State registry extract: Atlas Precision Works, Inc.",
+      "source": "State business registry (synthetic extract)",
+      "doc_type": "filing",
+      "published_date": "2026-08-30",
+      "applicant_id": "atlas-precision-works",
+      "country_code": "US",
+      "industry_code": "NAICS-332710",
+      "text": "Entity status: active and in good standing. Annual report filed on time for each of the last ten years. Secured filings of record are limited to two equipment UCC-1 financing statements in favour of the company's existing equipment lender; there are no liens against receivables or inventory and no judgment liens of record. No insolvency, receivership, or dissolution proceedings are recorded against the entity."
+    },
+    {
+      "doc_id": "litigation-atlas-001",
+      "title": "Wage claim against Atlas Precision Works settled and dismissed",
+      "source": "County court docket summary (synthetic)",
+      "doc_type": "litigation",
+      "published_date": "2023-11-02",
+      "applicant_id": "atlas-precision-works",
+      "country_code": "US",
+      "industry_code": "NAICS-332710",
+      "text": "A single-plaintiff wage-and-hour claim filed against Atlas Precision Works was settled and dismissed with prejudice. The docket records the settlement as immaterial and notes no admission of liability. No further litigation involving the company appears on the docket in the period reviewed."
+    },
+    {
+      "doc_id": "trade-atlas-001",
+      "title": "Trade payment experience summary: Atlas Precision Works",
+      "source": "Industry trade exchange (synthetic)",
+      "doc_type": "trade_reference",
+      "published_date": "2026-09-01",
+      "applicant_id": "atlas-precision-works",
+      "country_code": "US",
+      "industry_code": "NAICS-332710",
+      "text": "Aggregated payment experience across nine reporting suppliers shows a weighted average of 2 days beyond terms over the trailing twelve months, with no past due balances above 30 days and no accounts placed for collection. The highest credit extended on record is $620,000 on net 60 terms, paid within terms."
+    },
+    {
+      "doc_id": "industry-machining-001",
+      "title": "Precision machining outlook: aerospace backlog underpins demand",
+      "source": "Sector Outlook Quarterly (synthetic)",
+      "doc_type": "industry_report",
+      "published_date": "2026-07-14",
+      "country_code": "US",
+      "industry_code": "NAICS-332710",
+      "text": "Demand for precision machined aerospace components remains strong, supported by a multi-year commercial aircraft backlog and sustained defence spending. Capacity is tight and lead times on long-bar alloy remain extended, which favours incumbent suppliers with qualified processes. Sector insolvency rates are below the manufacturing average and pricing discipline has held."
+    },
+    {
+      "doc_id": "news-northwind-001",
+      "title": "Northwind Logistics obtains covenant waiver after fixed-charge test miss",
+      "source": "Freight Finance Wire (synthetic)",
+      "doc_type": "news",
+      "published_date": "2026-04-02",
+      "applicant_id": "northwind-logistics",
+      "country_code": "US",
+      "industry_code": "NAICS-484121",
+      "text": "Northwind Logistics Group missed its fixed-charge coverage covenant for the quarter ended 31 March 2026 and has obtained a written covenant waiver from its equipment lender. The waiver is reported to carry a 50 basis point pricing step-up and a tightened capital expenditure limit through the end of the year. The covenant breach follows a period of compressed freight rates; the lender's agent said the facility remains fully performing with no payment default."
+    },
+    {
+      "doc_id": "news-northwind-002",
+      "title": "Cascade Grocers renews Northwind haulage contract for three years",
+      "source": "Regional Logistics Daily (synthetic)",
+      "doc_type": "news",
+      "published_date": "2026-06-20",
+      "applicant_id": "northwind-logistics",
+      "country_code": "US",
+      "industry_code": "NAICS-484121",
+      "text": "Cascade Grocers Cooperative has renewed its dedicated haulage contract with Northwind Logistics Group for a further three years. The renewal secures Northwind's largest customer relationship through January 2029 and includes a fuel surcharge mechanism. Analysts noted that the renewal also entrenches a significant single-customer concentration, with the Cascade account representing roughly a third of Northwind revenue."
+    },
+    {
+      "doc_id": "litigation-northwind-001",
+      "title": "Subcontractor files contract claim against Northwind Logistics",
+      "source": "State civil docket summary (synthetic)",
+      "doc_type": "litigation",
+      "published_date": "2026-03-11",
+      "applicant_id": "northwind-logistics",
+      "country_code": "US",
+      "industry_code": "NAICS-484121",
+      "text": "A former line-haul subcontractor has filed a breach of contract lawsuit against Northwind Logistics Group seeking approximately $240,000 in unpaid accessorial charges. Northwind has answered and counterclaimed, characterising the dispute as a billing disagreement over detention time. The matter is in discovery; no judgment has been entered and the claimed amount is within the company's insurance retention."
+    },
+    {
+      "doc_id": "filing-northwind-001",
+      "title": "Guarantee registration extract: Northwind Holdings Ltd",
+      "source": "Corporate registry (synthetic extract)",
+      "doc_type": "filing",
+      "published_date": "2026-08-22",
+      "applicant_id": "northwind-logistics",
+      "country_code": "US",
+      "industry_code": "NAICS-484121",
+      "text": "Northwind Holdings Ltd is recorded in good standing and has registered an unconditional guarantee in favour of trade creditors of its operating subsidiary Northwind Logistics Group LLC. The parent's audited FY2025 accounts report equity of $41.2m and net debt to EBITDA of 1.4x. No liens, judgments, or insolvency proceedings are recorded against the guarantor."
+    },
+    {
+      "doc_id": "trade-northwind-001",
+      "title": "Trade payment experience summary: Northwind Logistics Group",
+      "source": "Industry trade exchange (synthetic)",
+      "doc_type": "trade_reference",
+      "published_date": "2026-09-04",
+      "applicant_id": "northwind-logistics",
+      "country_code": "US",
+      "industry_code": "NAICS-484121",
+      "text": "Aggregated payment experience across six reporting suppliers shows a weighted average of 9 days beyond terms over the trailing twelve months, deteriorating from 4 days in the prior year. Two suppliers report isolated 15-day slips that were cured after contact. No accounts have been placed for collection and no write-offs are reported."
+    },
+    {
+      "doc_id": "industry-freight-001",
+      "title": "Truckload freight: spot rates down 11% as overcapacity persists",
+      "source": "Freight Market Monitor (synthetic)",
+      "doc_type": "industry_report",
+      "published_date": "2026-05-28",
+      "country_code": "US",
+      "industry_code": "NAICS-484121",
+      "text": "Truckload spot rates declined 11% year on year and carrier operating margins remain under severe margin compression. Tractor overcapacity added during the prior freight cycle has been slow to exit, and small-fleet insolvency filings are running above their five-year average. Carriers with dedicated contract books and fuel surcharge protection have fared materially better than spot-exposed operators, though even contract carriers report thinner coverage of fixed charges."
+    },
+    {
+      "doc_id": "litigation-veritas-001",
+      "title": "Winding-up petition filed against Veritas Metal Trading S.A.",
+      "source": "Zubrowka Commercial Court gazette (synthetic)",
+      "doc_type": "litigation",
+      "published_date": "2026-08-14",
+      "applicant_id": "veritas-metal-trading",
+      "country_code": "ZB",
+      "industry_code": "NAICS-423510",
+      "text": "A winding-up petition has been presented against Veritas Metal Trading S.A. by a trade supplier in respect of an unpaid invoice balance of approximately $1.8m. The petition is listed for first hearing in October 2026. Court records show the debt was the subject of an earlier statutory demand that went unanswered. A second supplier has applied to be substituted as petitioner should the original petition be withdrawn."
+    },
+    {
+      "doc_id": "news-veritas-001",
+      "title": "Suppliers report payment default and mounting arrears at Veritas Metals",
+      "source": "Metals Trade Report (synthetic)",
+      "doc_type": "news",
+      "published_date": "2026-07-29",
+      "applicant_id": "veritas-metal-trading",
+      "country_code": "ZB",
+      "industry_code": "NAICS-423510",
+      "text": "At least four suppliers to Veritas Metal Trading have reported a payment default on open-account balances, with arrears extending beyond 90 days. Two mills have suspended shipments pending settlement of overdue amounts and one account has been placed for collection. A regional broker said Veritas has been seeking to extend payment terms across its supplier base since the first quarter."
+    },
+    {
+      "doc_id": "news-veritas-002",
+      "title": "Veritas Metals CFO resigns as auditor withdraws over inventory valuation",
+      "source": "Zubrowka Business Daily (synthetic)",
+      "doc_type": "news",
+      "published_date": "2026-06-05",
+      "applicant_id": "veritas-metal-trading",
+      "country_code": "ZB",
+      "industry_code": "NAICS-423510",
+      "text": "The chief financial officer of Veritas Metal Trading has resigned with immediate effect, days after the company's auditor resigned citing an unresolved inventory valuation review and a material weakness in inventory controls. The company has not yet appointed a replacement auditor and its most recent accounts remain management-prepared. Two people familiar with the review said a restatement of prior-period inventory is under consideration."
+    },
+    {
+      "doc_id": "litigation-veritas-002",
+      "title": "Two supplier claims and a customs penalty recorded against Veritas Metals",
+      "source": "Zubrowka Commercial Court gazette (synthetic)",
+      "doc_type": "litigation",
+      "published_date": "2026-05-19",
+      "applicant_id": "veritas-metal-trading",
+      "country_code": "ZB",
+      "industry_code": "NAICS-423510",
+      "text": "Two separate supplier claims totalling approximately $960,000 have been filed against Veritas Metal Trading S.A. for goods sold and delivered. Separately, the customs authority has assessed a regulatory penalty of $185,000 in relation to misdeclared import classifications; the company has lodged an appeal. Neither matter has been resolved."
+    },
+    {
+      "doc_id": "filing-veritas-001",
+      "title": "Charges register extract: Veritas Metal Trading S.A.",
+      "source": "Zubrowka corporate registry (synthetic extract)",
+      "doc_type": "filing",
+      "published_date": "2026-08-01",
+      "applicant_id": "veritas-metal-trading",
+      "country_code": "ZB",
+      "industry_code": "NAICS-423510",
+      "text": "Four new charges have been registered against the company in the last nine months, including a floating charge over inventory and a lien over receivables in favour of two short-term lenders. The register also records an unsatisfied judgment lien. The annual return is overdue and the last filed accounts were management-prepared."
+    },
+    {
+      "doc_id": "trade-veritas-001",
+      "title": "Trade payment experience summary: Veritas Metal Trading",
+      "source": "Industry trade exchange (synthetic)",
+      "doc_type": "trade_reference",
+      "published_date": "2026-09-06",
+      "applicant_id": "veritas-metal-trading",
+      "country_code": "ZB",
+      "industry_code": "NAICS-423510",
+      "text": "Aggregated payment experience shows a weighted average of 46 days beyond terms, with the majority of reported balances past due. Two accounts have been placed for collection in the last quarter and one supplier reports a partial write-off. Reporting suppliers have reduced or withdrawn open-account lines."
+    },
+    {
+      "doc_id": "country-zubrowka-001",
+      "title": "Country risk review: Republic of Zubrowka",
+      "source": "Sovereign Risk Desk (synthetic)",
+      "doc_type": "country_report",
+      "published_date": "2026-07-02",
+      "country_code": "ZB",
+      "text": "The Republic of Zubrowka remains at the weaker end of our scale. Capital controls introduced in 2025 continue to restrict hard-currency transfers, and exporters report transfer delays of 60 to 120 days on settlement of foreign invoices. Enforcement of trade debts through the commercial courts is slow and recovery rates on unsecured claims are low. We advise secured or prepaid structures for new open-account exposure."
+    },
+    {
+      "doc_id": "industry-metals-001",
+      "title": "Metals distribution: margin compression and rising counterparty failures",
+      "source": "Commodity Credit Briefing (synthetic)",
+      "doc_type": "industry_report",
+      "published_date": "2026-06-12",
+      "industry_code": "NAICS-423510",
+      "text": "Physical metals traders are absorbing severe margin compression as spreads narrow and working capital costs rise. Counterparty failures among thinly capitalised distributors increased sharply over the last four quarters, concentrated in operators funding inventory with short-dated facilities. Lenders have tightened borrowing-base advance rates, which has pushed several traders into arrears with suppliers."
+    },
+    {
+      "doc_id": "country-us-001",
+      "title": "Country risk review: United States",
+      "source": "Sovereign Risk Desk (synthetic)",
+      "doc_type": "country_report",
+      "published_date": "2026-07-02",
+      "country_code": "US",
+      "text": "The United States remains in our strongest country risk category. Transfers are unrestricted, contract enforcement through the courts is predictable, and recovery rates on unsecured trade claims are in line with historical norms. No transfer or convertibility restrictions apply to trade settlement."
+    }
+  ]
+}
