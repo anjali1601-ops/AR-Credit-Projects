@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Portfolio Surveillance</title>
+  <style>
+    :root {
+      --paper: #f3efe6;
+      --card: #fbf8f2;
+      --ink: #1c1915;
+      --muted: #5e574c;
+      --line: #d9d0c2;
+      --affirm: #1f6b45;
+      --reduce: #8a4b12;
+      --conditions: #1e4d7b;
+      --suspend: #8e2430;
+      --pending: #8a4b12;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Iowan Old Style", Palatino, Georgia, serif;
+    }
+    header, main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 28px 0 8px; }
+    .kicker {
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: ui-monospace, monospace;
+    }
+    h1 { font-weight: 500; font-size: 40px; margin: 8px 0; }
+    .lede { max-width: 68ch; color: var(--muted); font-size: 18px; line-height: 1.45; }
+    .toolbar, .summary { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .toolbar { margin: 18px 0; }
+    button, select, input {
+      font: inherit;
+      color: var(--ink);
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 8px 12px;
+    }
+    button { cursor: pointer; background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    button.secondary { background: transparent; color: var(--ink); }
+    button:disabled { opacity: 0.55; cursor: wait; }
+    .summary {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+      margin-bottom: 18px;
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+    }
+    .banner {
+      display: none;
+      background: #f8e8e6;
+      border: 1px solid #e3b8b4;
+      padding: 10px 12px;
+      margin: 12px 0;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-bottom: 40px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--muted);
+      padding: 16px 16px 18px;
+    }
+    .card.affirm { border-left-color: var(--affirm); }
+    .card.reduce { border-left-color: var(--reduce); }
+    .card.conditions { border-left-color: var(--conditions); }
+    .card.suspend { border-left-color: var(--suspend); }
+    .card-head, .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .card h2 { margin: 0; font-size: 24px; font-weight: 500; }
+    .meta, .note { color: var(--muted); }
+    .badge {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      border: 1px solid currentColor;
+    }
+    .affirm .badge { color: var(--affirm); }
+    .reduce .badge { color: var(--reduce); }
+    .conditions .badge { color: var(--conditions); }
+    .suspend .badge { color: var(--suspend); }
+    .figures { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin: 12px 0; }
+    .figures div { border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+    .figures span { display: block; color: var(--muted); font-size: 12px; }
+    .figures strong { font-family: ui-monospace, monospace; font-weight: 500; }
+    pre {
+      white-space: pre-wrap;
+      font-family: ui-monospace, "IBM Plex Mono", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      background: #f6f1e7;
+      border: 1px solid var(--line);
+      padding: 10px;
+      max-height: 280px;
+      overflow: auto;
+    }
+    form { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .status-line { font-family: ui-monospace, monospace; font-size: 12px; margin-top: 8px; }
+    .pending { color: var(--pending); }
+    footer { width: min(1120px, calc(100% - 32px)); margin: 0 auto 32px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 800px) {
+      h1 { font-size: 32px; }
+      .grid, .figures { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="kicker">Order to cash · Credit</div>
+    <h1>Credit Portfolio Surveillance</h1>
+    <p class="lede">Periodic review of open accounts. The engine computes exposure, payment drift, and broken promises. The memo narrates those figures and does not recalculate them.</p>
+    <div class="toolbar">
+      <button id="run" type="button">Run periodic review</button>
+      <button id="reseed" class="secondary" type="button">Reseed portfolio</button>
+    </div>
+    <div id="banner" class="banner" role="alert"></div>
+    <div id="summary" class="summary">Loading the portfolio…</div>
+  </header>
+  <main>
+    <div id="grid" class="grid"></div>
+  </main>
+  <footer>A limit increase, or a suspension above $75,000 of exposure, stays pending until a named credit manager approves it.</footer>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const money = (value) => Number(value).toLocaleString("en-US", { style: "currency", currency: "USD" });
+    let busy = false;
+
+    function showError(message) {
+      const banner = $("banner");
+      banner.style.display = "block";
+      banner.textContent = message;
+    }
+
+    function clearError() {
+      $("banner").style.display = "none";
+    }
+
+    async function api(path, options) {
+      const response = await fetch(path, options);
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const detail = body.detail;
+        const message = typeof detail === "string" ? detail : "The request failed.";
+        throw new Error(message);
+      }
+      return body;
+    }
+
+    function latestReviews(reviews) {
+      const byAccount = new Map();
+      for (const review of reviews) {
+        if (!byAccount.has(review.account_id)) byAccount.set(review.account_id, review);
+      }
+      return byAccount;
+    }
+
+    function figurePairs(review, account) {
+      const source = review ? review.cited_figures : account.facts;
+      const keys = [
+        "credit_limit", "proposed_limit", "exposure", "utilization",
+        "past_due_ar", "past_due_ratio", "over_limit_amount",
+        "payment_drift_days", "late_payment_rate",
+        "broken_promise_count", "broken_promise_amount"
+      ];
+      return keys
+        .filter((key) => source[key] !== undefined)
+        .map((key) => [key, source[key]]);
+    }
+
+    function render(portfolio, accounts, reviews) {
+      $("summary").textContent = [
+        `As of ${portfolio.as_of}`,
+        `${portfolio.account_count} accounts`,
+        `exposure ${money(portfolio.total_exposure)}`,
+        `limits ${money(portfolio.total_credit_limit)}`,
+        `past due ${money(portfolio.total_past_due)}`,
+        `${portfolio.pending_approval} awaiting approval`
+      ].join("  ·  ");
+
+      const byReview = latestReviews(reviews);
+      const grid = $("grid");
+      grid.replaceChildren();
+      if (!accounts.length) {
+        const empty = document.createElement("p");
+        empty.textContent = "The portfolio is empty. Reseed the four demonstration accounts.";
+        grid.append(empty);
+        return;
+      }
+      for (const account of accounts) {
+        const review = byReview.get(account.id);
+        const action = review ? review.action : "unreviewed";
+        const card = document.createElement("article");
+        card.className = `card ${review ? review.action : ""}`;
+
+        const head = document.createElement("div");
+        head.className = "card-head";
+        const title = document.createElement("div");
+        const name = document.createElement("h2");
+        name.textContent = account.name;
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent = `${account.id} · ${account.segment} · Net ${account.terms_days} · ${account.status}`;
+        title.append(name, meta);
+        const badge = document.createElement("div");
+        badge.className = "badge";
+        badge.textContent = action.toUpperCase();
+        head.append(title, badge);
+
+        const note = document.createElement("p");
+        note.className = "note";
+        note.textContent = account.analyst_note;
+
+        const figures = document.createElement("div");
+        figures.className = "figures";
+        for (const [key, value] of figurePairs(review, account)) {
+          const cell = document.createElement("div");
+          const label = document.createElement("span");
+          label.textContent = key.replaceAll("_", " ");
+          const strong = document.createElement("strong");
+          strong.textContent = value;
+          cell.append(label, strong);
+          figures.append(cell);
+        }
+
+        card.append(head, note, figures);
+
+        if (!review) {
+          const waiting = document.createElement("p");
+          waiting.textContent = "No periodic review has been drafted for this account yet.";
+          card.append(waiting);
+        } else {
+          const limitLine = document.createElement("div");
+          limitLine.className = "status-line";
+          limitLine.textContent = `Limit ${review.current_limit} → ${review.proposed_limit} · ${review.status.replaceAll("_", " ")}`;
+          const authority = document.createElement("p");
+          authority.textContent = review.authority.reason;
+          if (review.status === "pending_approval") authority.className = "pending";
+          const memo = document.createElement("pre");
+          memo.textContent = review.narrative;
+          card.append(limitLine, authority, memo, actionsFor(review));
+        }
+        grid.append(card);
+      }
+    }
+
+    function actionsFor(review) {
+      const wrap = document.createElement("div");
+      if (review.status === "posted") {
+        const posted = document.createElement("div");
+        posted.className = "status-line";
+        const who = review.approver_name
+          ? `Approved by ${review.approver_name}`
+          : `Posted by ${review.posted_by}`;
+        posted.textContent = who;
+        wrap.append(posted);
+        return wrap;
+      }
+      if (review.status === "ready") {
+        const form = document.createElement("form");
+        const input = document.createElement("input");
+        input.name = "actor";
+        input.value = "Alex Kim";
+        input.setAttribute("aria-label", `Actor posting ${review.account_name}`);
+        const button = document.createElement("button");
+        button.type = "submit";
+        button.textContent = "Post decision";
+        form.append(input, button);
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          await act(`/reviews/${review.id}/post`, {
+            actor_name: input.value,
+            actor_role: "analyst"
+          });
+        });
+        wrap.append(form);
+        return wrap;
+      }
+      const form = document.createElement("form");
+      const input = document.createElement("input");
+      input.name = "approver";
+      input.placeholder = "Approver name";
+      input.value = "Jordan Hale";
+      input.setAttribute("aria-label", `Approver for ${review.account_name}`);
+      const role = document.createElement("select");
+      role.setAttribute("aria-label", "Approver role");
+      for (const [value, label] of [["credit_manager", "Credit manager"], ["analyst", "Analyst"]]) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        role.append(option);
+      }
+      const button = document.createElement("button");
+      button.type = "submit";
+      button.textContent = "Approve and post";
+      form.append(input, role, button);
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await act(`/reviews/${review.id}/approve`, {
+          approver_name: input.value,
+          approver_role: role.value
+        });
+      });
+      wrap.append(form);
+      return wrap;
+    }
+
+    async function act(path, payload) {
+      clearError();
+      setBusy(true);
+      try {
+        await api(path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        await load();
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function setBusy(value) {
+      busy = value;
+      $("run").disabled = value;
+      $("reseed").disabled = value;
+    }
+
+    async function load() {
+      const [portfolio, accountBody, reviewBody] = await Promise.all([
+        api("/portfolio"),
+        api("/accounts"),
+        api("/reviews")
+      ]);
+      render(portfolio, accountBody.accounts, reviewBody.reviews);
+    }
+
+    $("run").addEventListener("click", async () => {
+      clearError();
+      setBusy(true);
+      $("run").textContent = "Drafting memos…";
+      try {
+        await api("/reviews/run", { method: "POST" });
+        await load();
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        $("run").textContent = "Run periodic review";
+        setBusy(false);
+      }
+    });
+
+    $("reseed").addEventListener("click", async () => {
+      clearError();
+      setBusy(true);
+      try {
+        await api("/portfolio/seed", { method: "POST" });
+        await load();
+      } catch (error) {
+        showError(error.message);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    load().catch((error) => showError(error.message || "The surveillance API is not responding."));
+  </script>
+</body>
+</html>
