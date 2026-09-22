@@ -45,6 +45,10 @@ def test_dates_and_ordinals_are_not_treated_as_claimed_figures():
     """A memo that mentions a date has not asserted a number needing evidence."""
     assert extract_numbers("for the quarter ended 31 March 2026") == []
     assert extract_numbers("contracted to 2029-01-31") == []
+    assert extract_numbers("a covenant breach in the last 24 months") == []
+    assert extract_numbers("Aurora Trade Credit policy TC-88421") == []
+    assert extract_numbers("approximately $240k claimed")[0].value == pytest.approx(240_000.0)
+    assert extract_numbers("Free cash flow was negative at -$700k")[0].value == pytest.approx(-700_000.0)
 
 
 def test_matching_tolerates_the_rounding_the_memo_displays():

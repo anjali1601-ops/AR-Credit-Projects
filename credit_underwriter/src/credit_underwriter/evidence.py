@@ -22,7 +22,7 @@ _NUMBER_RE = re.compile(
     [$€£]?\s?
     (?P<digits>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)
     \s?
-    (?P<suffix>[mkbx%]|\ ?days|\ ?bps)?
+    (?P<suffix>[mkbx](?![a-z])|%|\ ?days|\ ?bps)?
     """,
     re.IGNORECASE | re.VERBOSE,
 )
@@ -33,6 +33,23 @@ _PERIOD_TOKENS = re.compile(
     r"(\d{4}-\d{2}-\d{2}|\bFY\s?\d{4}\b|\bQ[1-4]\s?\d{0,4}\b|\bH[12]\s?\d{0,4}\b)",
     re.IGNORECASE,
 )
+
+_MONTHS = (
+    "january|february|march|april|may|june|july|august|september|october|"
+    "november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec"
+)
+_WRITTEN_DATES = re.compile(
+    rf"""
+    \b(?:
+        \d{{1,2}}(?:st|nd|rd|th)?\s+(?:{_MONTHS})(?:\s+\d{{4}})?
+        | (?:{_MONTHS})\s+\d{{1,2}}(?:st|nd|rd|th)?(?:,?\s*\d{{4}})?
+    )\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+#: Policy numbers, docket ids, and similar (``TC-88421``) are identifiers.
+_ID_CODES = re.compile(r"\b[A-Z]{1,8}-\d+\b", re.IGNORECASE)
 
 #: Labels that precede an ordinal rather than a quantity.
 _ORDINAL_CONTEXT = re.compile(r"\b(grade|tier|net|band|naics|sic)\b[\s:]*$", re.IGNORECASE)
@@ -172,13 +189,19 @@ def extract_numbers(text: str) -> list[ClaimedNumber]:
     they are references rather than measured facts, so requiring evidence for
     "FY2025" would make the check noisy without making the memo more trustworthy.
     """
-    cleaned = _PERIOD_TOKENS.sub(" ", text)
+    cleaned = _ID_CODES.sub(
+        " ", _WRITTEN_DATES.sub(" ", _PERIOD_TOKENS.sub(" ", text))
+    )
     found: list[ClaimedNumber] = []
     for match in _NUMBER_RE.finditer(cleaned):
         raw_digits = match.group("digits")
         suffix = (match.group("suffix") or "").strip().lower()
         prefix = cleaned[max(0, match.start() - 12) : match.start()]
         if not suffix and _ORDINAL_CONTEXT.search(prefix):
+            continue
+        trailing = cleaned[match.end() : match.end() + 16]
+        if not suffix and re.match(r"\s*months\b", trailing, re.IGNORECASE):
+            # Lookback windows ("last 24 months") are not measured facts.
             continue
 
         value = float(raw_digits.replace(",", ""))

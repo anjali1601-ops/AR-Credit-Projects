@@ -168,6 +168,9 @@ def _register_application_evidence(
         source,
         display_value=_disclosure_summary(application),
         detail=application.disclosures.notes or None,
+        numeric_values=[
+            n.value for n in extract_numbers(application.disclosures.notes or "")
+        ],
     )
     for ref in application.trade_references:
         registry.register(

@@ -14,6 +14,8 @@ figure -- rather than being left in the memo.
 
 from __future__ import annotations
 
+import re
+
 from ..evidence import EvidenceRegistry, extract_numbers
 from ..llm import LLMRequest
 from ..models import (
@@ -277,9 +279,13 @@ def _repair_claim(
             )
 
     # Last resort: strip the untraceable figures rather than assert them.
+    # Replace only standalone occurrences so "24" cannot rewrite "$240k" into "$0k".
     text = claim.text
-    for number in still_missing:
-        text = text.replace(number.text, "an amount not evidenced in the file")
+    for number in sorted(still_missing, key=lambda n: len(n.text), reverse=True):
+        pattern = re.compile(
+            rf"(?<![\d.,]){re.escape(number.text)}(?![\d.,A-Za-z])"
+        )
+        text = pattern.sub("an amount not evidenced in the file", text, count=1)
     return claim.model_copy(
         update={
             "text": text,
