@@ -226,11 +226,17 @@ export DRA_DATABASE_URL="postgresql+psycopg://dra:dra@localhost:5432/dra"
 python -m dra seed
 ```
 
-The models, guardrails and queries are portable — no SQLite-only SQL is generated. For
-a hard guarantee at the role level, create a `SELECT`-only role and point
-`DRA_READONLY_DATABASE_URL` at it; the Text-to-SQL path will use it while application
-writes keep the main connection. PGVector instead of ChromaDB would slot in behind the
-`VectorStore` protocol in `dra/rag/store.py`.
+The models, guardrails and queries are portable — no SQLite-only SQL is generated, and
+the read-only transaction switches from `PRAGMA query_only` to `SET TRANSACTION READ
+ONLY` plus a statement timeout on its own. For a hard guarantee at the role level,
+create a `SELECT`-only role and point `DRA_READONLY_DATABASE_URL` at it; the
+Text-to-SQL path will use it while application writes keep the main connection.
+PGVector instead of ChromaDB would slot in behind the `VectorStore` protocol in
+`dra/rag/store.py`.
+
+To be straight about it: SQLite is the path that has actually been exercised end to
+end here (no Docker in the build environment), so treat the PostgreSQL branch as
+written-and-portable rather than as tested.
 
 ### Settings worth knowing
 
