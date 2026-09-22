@@ -98,7 +98,7 @@ def render_memo(
     lines.append("")
 
     if critique is not None and not critique.passed:
-        lines.append("### Outstanding completeness issues")
+        lines.append("## Outstanding completeness issues")
         lines.append("")
         for issue in critique.issues:
             lines.append(f"- `{issue.code}` {issue.detail}")

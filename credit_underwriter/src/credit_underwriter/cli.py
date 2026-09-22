@@ -246,20 +246,28 @@ def _cmd_show(args: argparse.Namespace, settings: Settings) -> int:
 
 
 def _cmd_verify(args: argparse.Namespace, settings: Settings) -> int:
-    matches, stored, fresh = verify(args.run_id, settings)
+    result = verify(args.run_id, settings)
+    stored, fresh = result.stored, result.fresh
     print(f"run              {stored.run_id}")
     print(f"recorded at      {stored.created_at}")
     print(f"stored hash      {stored.state_hash}")
+    print(f"file hash        {stored.compute_state_hash()}")
     print(f"recomputed hash  {fresh.state_hash}")
     print(f"fingerprint      {stored.fingerprint.digest()} / {fresh.fingerprint.digest()}")
-    if matches:
-        print("\nreproducible: the re-run produced byte-identical analysis, decision, and memo.")
+    print(f"content intact   {'yes' if result.content_intact else 'NO'}")
+    print(f"reproducible     {'yes' if result.reproducible else 'NO'}")
+    if result.passed:
+        print("\nverified: the stored file is intact and a re-run produced an identical memo.")
         return 0
-    print(
-        "\nNOT reproducible: the re-run differs. Compare the fingerprints above — a changed "
-        "engine version, corpus hash, or provider explains the difference.",
-        file=sys.stderr,
-    )
+    reasons: list[str] = []
+    if not result.content_intact:
+        reasons.append("the persisted file was modified after it was written")
+    if not result.reproducible:
+        reasons.append(
+            "a fresh underwriting differs — a changed engine version, corpus hash, or "
+            "provider usually explains it"
+        )
+    print("\nNOT verified: " + "; ".join(reasons) + ".", file=sys.stderr)
     return 1
 
 

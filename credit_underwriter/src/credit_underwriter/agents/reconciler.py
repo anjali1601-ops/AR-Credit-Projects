@@ -690,7 +690,7 @@ def _enhancement_capacity(application: CreditApplication, hard_blocked: bool) ->
     return capacity
 
 
-def _clamp_grade(grade: int, floor: int) -> int:
+def _clamp_grade(grade: int, floor: int = 1) -> int:
     return max(1, min(10, max(grade, floor)))
 
 

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from .agents.context import GraphContext
 from .config import Settings
 from .evidence import EvidenceRegistry
@@ -109,14 +111,36 @@ def replay(run_id: str, settings: Settings | None = None) -> RunRecord:
     return record.model_copy(update={"memo_markdown": markdown})
 
 
-def verify(run_id: str, settings: Settings | None = None) -> tuple[bool, RunRecord, RunRecord]:
-    """Re-underwrite a persisted run and compare state hashes.
+@dataclass(frozen=True)
+class Verification:
+    """Outcome of ``credit-underwriter verify``.
 
-    Returns ``(matches, stored, fresh)``. A mismatch means either the engine or
-    the corpus changed since the run was recorded, which the differing
-    fingerprints will show.
+    Two independent checks:
+
+    * ``content_intact`` — the file on disk still hashes to the ``state_hash``
+      recorded when it was written. A hand-edited limit or memo fails this.
+    * ``reproducible`` — underwriting the stored application again produces the
+      same ``state_hash``. A changed engine, corpus, or provider fails this.
     """
+
+    content_intact: bool
+    reproducible: bool
+    stored: RunRecord
+    fresh: RunRecord
+
+    @property
+    def passed(self) -> bool:
+        return self.content_intact and self.reproducible
+
+
+def verify(run_id: str, settings: Settings | None = None) -> Verification:
+    """Reload a persisted run, re-underwrite it, and check both integrity axes."""
     settings = settings or Settings.from_env()
     stored = load_run(run_id, settings)
     fresh = underwrite(stored.application, settings=settings, persist=False)
-    return stored.state_hash == fresh.state_hash, stored, fresh
+    return Verification(
+        content_intact=stored.state_hash == stored.compute_state_hash(),
+        reproducible=stored.state_hash == fresh.state_hash,
+        stored=stored,
+        fresh=fresh,
+    )

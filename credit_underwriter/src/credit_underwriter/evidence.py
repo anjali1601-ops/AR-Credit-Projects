@@ -8,7 +8,7 @@ a statement line, a computed ratio, a retrieved document, or a policy rule.
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 
 from .models import EvidenceItem, EvidenceKind
@@ -207,6 +207,21 @@ def extract_numbers(text: str) -> list[ClaimedNumber]:
     return found
 
 
-def numbers_match(claimed: float, supported: Iterable[float], tolerance: float = 0.005) -> bool:
-    """Convenience wrapper for comparing a bare float against evidence values."""
-    return ClaimedNumber(claimed, tolerance, str(claimed)).is_supported_by(supported)
+def numbers_match(
+    claimed: float | ClaimedNumber | Sequence[ClaimedNumber],
+    supported: Iterable[float],
+    tolerance: float = 0.005,
+) -> bool:
+    """Whether every claimed figure is supported by the given evidence values.
+
+    Accepts a bare float, a :class:`ClaimedNumber` extracted from prose, or the
+    list :func:`extract_numbers` returns, so the citation tests and the critic
+    can share one helper.
+    """
+    if isinstance(claimed, ClaimedNumber):
+        return claimed.is_supported_by(supported)
+    if isinstance(claimed, (int, float)):
+        return ClaimedNumber(float(claimed), tolerance, str(claimed)).is_supported_by(supported)
+    if not claimed:
+        return False
+    return all(number.is_supported_by(supported) for number in claimed)

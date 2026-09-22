@@ -11,7 +11,7 @@ from collections.abc import Iterable
 from enum import StrEnum
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field
+from pydantic import BaseModel, ConfigDict, Field
 
 # --------------------------------------------------------------------------------------
 # Enumerations
@@ -151,27 +151,22 @@ class IncomeStatement(BaseModel):
     income_tax_expense: float = 0.0
     other_income: float = 0.0
 
-    @computed_field
     @property
     def gross_profit(self) -> float:
         return self.revenue - self.cost_of_goods_sold
 
-    @computed_field
     @property
     def ebitda(self) -> float:
         return self.gross_profit - self.operating_expenses + self.other_income
 
-    @computed_field
     @property
     def ebit(self) -> float:
         return self.ebitda - self.depreciation_amortization
 
-    @computed_field
     @property
     def pretax_income(self) -> float:
         return self.ebit - self.interest_expense
 
-    @computed_field
     @property
     def net_income(self) -> float:
         return self.pretax_income - self.income_tax_expense
@@ -195,7 +190,6 @@ class BalanceSheet(BaseModel):
     other_non_current_liabilities: float
     total_equity: float
 
-    @computed_field
     @property
     def total_current_assets(self) -> float:
         return (
@@ -205,7 +199,6 @@ class BalanceSheet(BaseModel):
             + self.other_current_assets
         )
 
-    @computed_field
     @property
     def total_assets(self) -> float:
         return (
@@ -215,12 +208,10 @@ class BalanceSheet(BaseModel):
             + self.other_non_current_assets
         )
 
-    @computed_field
     @property
     def total_current_liabilities(self) -> float:
         return self.accounts_payable + self.short_term_debt + self.other_current_liabilities
 
-    @computed_field
     @property
     def total_liabilities(self) -> float:
         return (
@@ -229,22 +220,18 @@ class BalanceSheet(BaseModel):
             + self.other_non_current_liabilities
         )
 
-    @computed_field
     @property
     def total_debt(self) -> float:
         return self.short_term_debt + self.long_term_debt
 
-    @computed_field
     @property
     def net_debt(self) -> float:
         return self.total_debt - self.cash_and_equivalents
 
-    @computed_field
     @property
     def working_capital(self) -> float:
         return self.total_current_assets - self.total_current_liabilities
 
-    @computed_field
     @property
     def tangible_net_worth(self) -> float:
         return self.total_equity - self.intangible_assets
@@ -257,7 +244,6 @@ class CashFlowStatement(BaseModel):
     capital_expenditures: float
     dividends_and_distributions: float = 0.0
 
-    @computed_field
     @property
     def free_cash_flow(self) -> float:
         return self.cash_from_operations - self.capital_expenditures
