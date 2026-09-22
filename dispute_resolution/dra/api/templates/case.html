@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+{% macro money(v) %}{% if v is not none %}${{ '{:,.2f}'.format(v) }}{% else %}—{% endif %}{% endmacro %}
+
+{% block title %}{{ case.case_number }} · Dispute Desk{% endblock %}
+{% block subtitle %}<a href="/">← all cases</a> · {{ case.case_number }} · invoice {{ case.invoice_number }}{% endblock %}
+{% block context %}{{ case.state.replace('_', ' ') }} · owner: {{ case.owner_agent }}{% endblock %}
+
+{% block content %}
+<section>
+  <div class="panel" style="padding:20px 22px">
+    <div class="flex" style="justify-content:space-between; align-items:flex-start">
+      <div>
+        <div class="muted" style="font-size:13px">{{ case.customer_name }} ({{ case.customer_code }}) ·
+          {{ (case.reason_code or '').replace('_', ' ') }}</div>
+        <h2 style="margin:6px 0 10px; font-size:22px; color:var(--text); text-transform:none; letter-spacing:0">
+          {% if case.decision == 'valid' %}Claim upheld — credit {{ money(case.approved_credit_amount) }}
+          {% elif case.decision == 'invalid' %}Claim declined — {{ money(case.disputed_amount) }} remains due
+          {% else %}More information needed{% endif %}
+        </h2>
+        <p style="max-width:70ch; margin:0">{{ case.decision_rationale }}</p>
+      </div>
+      <div style="text-align:right">
+        <div class="muted" style="font-size:12px">CLAIMED</div>
+        <div style="font-size:26px; font-weight:650">{{ money(case.disputed_amount) }}</div>
+        <div class="muted" style="font-size:12px; margin-top:6px">
+          confidence {{ '{:.0%}'.format(case.decision_confidence or 0) }}</div>
+      </div>
+    </div>
+
+    {% if case.approval_links %}
+    <div class="flex" style="margin-top:18px; padding-top:16px; border-top:1px solid var(--line)">
+      <a class="btn approve" href="{{ case.approval_links.approve_url }}">
+        {% if case.decision == 'valid' %}Approve credit memo{% else %}Approve &amp; send reply{% endif %}
+      </a>
+      <a class="btn reject" href="{{ case.approval_links.reject_url }}">Reject</a>
+      <span class="muted" style="font-size:13px">One click. Nothing has been sent to the customer yet.</span>
+    </div>
+    {% elif case.resolution %}
+    <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--line)" class="muted">
+      Closed as <strong>{{ case.resolution }}</strong> by {{ case.resolved_by }}.
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<div class="grid-2">
+  <div>
+    <section>
+      <h2>Evidence the auditor relied on</h2>
+      <div class="panel" style="padding:14px 20px">
+        <ul style="margin:6px 0; padding-left:20px">
+          {% for line in case.evidence %}<li style="margin-bottom:7px">{{ line }}</li>{% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Policy checks</h2>
+      <div class="panel">
+        <table>
+          <tbody>
+          {% for check in case.checks %}
+            <tr>
+              <td style="width:78px">
+                {% if check.passed %}<span class="pill ok">pass</span>{% else %}<span class="pill bad">fail</span>{% endif %}
+              </td>
+              <td><strong>{{ check.name }}</strong><div class="muted" style="font-size:13px">{{ check.detail }}</div></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Drafted correspondence</h2>
+      {% for draft in case.drafts %}
+      <div class="panel" style="padding:16px 20px; margin-bottom:14px">
+        <div class="flex" style="justify-content:space-between">
+          <div>
+            <span class="pill info">{{ draft.kind.replace('_', ' ') }}</span>
+            <span class="muted" style="font-size:13px"> to {{ draft.recipient }}</span>
+          </div>
+          {% if draft.status in ('sent', 'issued') %}<span class="pill ok">{{ draft.status }}</span>{% else %}<span class="pill warn">held as draft</span>{% endif %}
+        </div>
+        <p style="margin:12px 0 10px"><strong>{{ draft.subject }}</strong></p>
+        <pre>{{ draft.body }}</pre>
+      </div>
+      {% endfor %}
+    </section>
+
+    <section>
+      <h2>Read-only ERP queries ({{ case.queries | length }})</h2>
+      <div class="panel" style="padding:14px 20px">
+        {% for q in case.queries %}
+        <details style="margin-bottom:10px">
+          <summary style="cursor:pointer">
+            {{ q.question }}
+            <span class="pill {{ 'ok' if q.status == 'ok' else 'bad' }}" style="margin-left:8px">{{ q.status }} · {{ q.row_count }} rows · {{ q.duration_ms }} ms</span>
+          </summary>
+          <pre style="margin-top:10px">{{ q.generated_sql }}
+
+-- bound parameters: {{ q.params }}</pre>
+        </details>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <div>
+    <section>
+      <h2>Contract basis</h2>
+      <div class="panel" style="padding:16px 20px">
+        {% if case.cited_clause_ref %}
+        <div class="pill info">{{ case.cited_clause_ref }}</div>
+        <p style="margin-top:12px; font-size:14px">{{ case.cited_clause_text }}</p>
+        {% else %}<span class="muted">No clause cited.</span>{% endif %}
+      </div>
+    </section>
+
+    <section>
+      <h2>Also retrieved</h2>
+      <div class="panel">
+        <table>
+          <tbody>
+          {% for clause in case.retrieved_clauses[1:] %}
+            <tr>
+              <td>
+                <div class="mono" style="font-size:12.5px">{{ clause.contract_number }} · {{ clause.clause_ref }}</div>
+                <div>{{ clause.clause_title }}</div>
+                <div class="muted" style="font-size:12px">score {{ clause.score }} · {{ clause.source_pdf }}</div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {% if case.credit_memo %}
+    <section>
+      <h2>Credit memo</h2>
+      <div class="panel" style="padding:16px 20px">
+        <div class="flex" style="justify-content:space-between">
+          <span class="mono">{{ case.credit_memo.memo_number }}</span>
+          <span class="pill {{ 'ok' if case.credit_memo.status == 'issued' else ('bad' if case.credit_memo.status == 'voided' else 'warn') }}">{{ case.credit_memo.status }}</span>
+        </div>
+        <div style="font-size:24px; font-weight:650; margin-top:8px">{{ money(case.credit_memo.amount) }}</div>
+        {% if case.credit_memo.issued_by %}
+        <div class="muted" style="font-size:13px; margin-top:6px">issued by {{ case.credit_memo.issued_by }}</div>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+
+    <section>
+      <h2>Agent handoffs</h2>
+      <div class="panel">
+        <table>
+          <tbody>
+          {% for e in case.events %}
+            <tr>
+              <td>
+                <div class="muted mono" style="font-size:12px">
+                  {{ e.from_state }} → {{ e.to_state }}
+                  {% if e.to_agent %}· {{ e.from_agent }} → {{ e.to_agent }}{% endif %}
+                </div>
+                <div style="font-size:13.5px; margin-top:4px">{{ e.summary }}</div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

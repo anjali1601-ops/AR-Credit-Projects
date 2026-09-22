@@ -463,9 +463,9 @@ class DisputeOrchestrator:
                 invoice.status = "settled_with_credit"
             resolution = f"credit_memo_issued:{memo.memo_number}"
             summary = (
-                f"{actor} approved. Credit memo {memo.memo_number} for {memo.amount} "
-                f"issued against invoice {case.invoice_number} and the customer "
-                f"confirmation released."
+                f"{actor} approved. Credit memo {memo.memo_number} for "
+                f"${memo.amount:,.2f} issued against invoice {case.invoice_number} and "
+                f"the customer confirmation released."
             )
             session.add(
                 CaseDraft(
@@ -492,9 +492,10 @@ class DisputeOrchestrator:
             )
 
         for draft in drafts:
-            if draft.kind in {"customer_email", "supervisor_email"} and draft.status == "draft":
-                draft.status = "sent"
-                draft.sent_at = _utcnow()
+            if draft.status != "draft":
+                continue
+            draft.status = "issued" if draft.kind == "credit_memo" else "sent"
+            draft.sent_at = _utcnow()
 
         case.resolution = resolution
         case.resolved_by = actor
