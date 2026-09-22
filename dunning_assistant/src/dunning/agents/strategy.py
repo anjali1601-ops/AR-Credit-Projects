@@ -116,7 +116,12 @@ def decide_strategy(
         stage_idx -= 1
         trace.append("sentiment: cooperative and self-correcting -> hold back one stage")
 
+    requested_idx = stage_idx
     stage_idx = max(0, min(base_idx + 1, stage_idx))
+    if requested_idx > stage_idx:
+        trace.append(
+            f"guardrail: behaviour can only escalate one stage above the {STAGE_ORDER[base_idx]} aging baseline -> capped"
+        )
     if stage_idx >= 4 and not (metrics.oldest_days_past_due >= 90 or metrics.promises_broken >= 3):
         stage_idx = 3
         trace.append("guardrail: pre-legal notice requires 90+ day aging or three broken promises -> capped")
