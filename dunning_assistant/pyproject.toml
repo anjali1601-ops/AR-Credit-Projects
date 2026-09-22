@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pandas>=2.0",
+    "numpy>=1.24",
     "langgraph>=0.2",
+    "langchain-core>=0.3",
     "pydantic>=2.5",
     "typer>=0.12",
     "rich>=13.0",
