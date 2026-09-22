@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+{% block title %}{{ item.external_ref }} · Cash application{% endblock %}
+{% block body %}
+<p><a class="back" href="/">← Queue</a></p>
+<div class="row">
+  <h2 style="margin-top:0">{{ item.external_ref }}</h2>
+  <div class="money">{{ item.amount | money }}</div>
+</div>
+<p class="meta">
+  <span class="badge kind-{{ item.kind }}">{{ item.kind_label }}</span>
+  {{ item.channel_label }} · {{ item.payer_name or "Unknown payer" }}
+  {% if item.payer_account %}· {{ item.payer_account }}{% endif %}
+  {% if item.payment_reference %}· ref {{ item.payment_reference }}{% endif %}
+  · confidence {{ item.confidence }}
+  · {{ item.queue }}
+</p>
+
+{% if error %}
+<div class="banner">{{ error }}</div>
+{% endif %}
+
+{% if item.receipt %}
+<div class="ok">
+  Posted by {{ item.receipt.posted_by }} as {{ item.receipt.status }}
+  ({{ item.receipt.action }}). Applied {{ item.receipt.applied_amount | money }},
+  unapplied {{ item.receipt.unapplied_amount | money }}.
+</div>
+{% endif %}
+
+<p class="explain">{{ item.explanation }}</p>
+<p class="meta">Explanation provider: {{ provider }}. The provider did not choose the invoices or the amounts.</p>
+<p>{{ item.route_reason }}</p>
+
+{% if item.lines %}
+<h2>Proposed application</h2>
+<table>
+  <thead>
+    <tr><th>Invoice</th><th>Customer</th><th class="num">Open</th><th class="num">Apply</th><th class="num">Would remain</th></tr>
+  </thead>
+  <tbody>
+    {% for line in item.lines %}
+    <tr>
+      <td>{{ line.invoice_number }}</td>
+      <td>{{ line.customer_name }}</td>
+      <td class="num">{{ line.open_amount | money }}</td>
+      <td class="num">{{ line.proposed_amount | money }}</td>
+      <td class="num">{{ line.preview_open_after | money }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p class="meta">Unapplied cash if you accept this proposal: {{ item.unapplied_cash | money }}. Short fall left on the invoices: {{ item.short_fall | money }}.</p>
+{% endif %}
+
+<h2>Ranked candidates</h2>
+{% if item.candidates %}
+<table>
+  <thead>
+    <tr><th></th><th>Invoice</th><th>Customer</th><th class="num">Open</th><th class="num">Score</th><th>Why</th></tr>
+  </thead>
+  <tbody>
+    {% for candidate in item.candidates %}
+    <tr>
+      <td>{% if candidate.selected %}Selected{% endif %}</td>
+      <td>{{ candidate.invoice_number }}</td>
+      <td>{{ candidate.customer_name }}<div class="meta">{{ candidate.customer_account }}</div></td>
+      <td class="num">{{ candidate.open_amount | money }}</td>
+      <td class="num">{{ candidate.score }}</td>
+      <td>{{ candidate.reason_labels | join("; ") }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">No open invoice scored against this remittance.</p>
+{% endif %}
+
+{% if not item.receipt %}
+<h2>Clerk confirm</h2>
+<form method="post" action="/remittances/{{ item.external_ref }}/confirm">
+  <label class="clerk">Clerk name
+    <input type="text" name="clerk" value="Alex Chen" required>
+  </label>
+  <div class="split">
+    <table>
+      <thead><tr><th>Invoice</th><th class="num">Split amount</th></tr></thead>
+      <tbody>
+        {% for candidate in item.candidates %}
+        <tr>
+          <td>{{ candidate.invoice_number }}</td>
+          <td class="num"><input class="amt" name="amount_{{ candidate.invoice_number }}" value="{{ candidate.proposed_amount or '0.00' }}" inputmode="decimal"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="actions">
+    {% if "apply" in item.allowed_actions %}
+    <button name="action" value="apply">Apply proposal</button>
+    {% endif %}
+    {% if "split" in item.allowed_actions %}
+    <button class="secondary" name="action" value="split">Post split</button>
+    {% endif %}
+    {% if "leave_unapplied" in item.allowed_actions %}
+    <button class="ghost" name="action" value="leave_unapplied">Leave unapplied</button>
+    {% endif %}
+  </div>
+</form>
+{% elif item.receipt.applications %}
+<h2>Ledger</h2>
+<table>
+  <thead><tr><th>Invoice</th><th class="num">Applied</th><th class="num">Open before</th><th class="num">Open after</th></tr></thead>
+  <tbody>
+    {% for app in item.receipt.applications %}
+    <tr>
+      <td>{{ app.invoice_number }}</td>
+      <td class="num">{{ app.amount | money }}</td>
+      <td class="num">{{ app.open_before | money }}</td>
+      <td class="num">{{ app.open_after | money }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<h2>Remittance</h2>
+<pre>{{ item.raw_text }}</pre>
+{% endblock %}

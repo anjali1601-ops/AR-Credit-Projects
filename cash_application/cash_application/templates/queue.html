@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Cash application queue{% endblock %}
+{% block body %}
+<p class="sub">Explanations are written by the {{ provider }} provider. The match itself is deterministic.</p>
+
+<h2>Ready to confirm</h2>
+{% if ready %}
+  {% for item in ready %}
+  <article class="card queue-ready">
+    <div class="row">
+      <div>
+        <a class="ref" href="/remittances/{{ item.external_ref }}">{{ item.external_ref }}</a>
+        <span class="badge kind-{{ item.kind }}">{{ item.kind_label }}{% if item.line_count > 1 %} · {{ item.line_count }} invoices{% endif %}</span>
+      </div>
+      <div class="money">{{ item.amount | money }}</div>
+    </div>
+    <div class="meta">{{ item.channel_label }} · {{ item.payer_name or "Unknown payer" }}{% if item.payer_account %} · {{ item.payer_account }}{% endif %} · confidence {{ item.confidence }}</div>
+    <p>{{ item.explanation }}</p>
+  </article>
+  {% endfor %}
+{% else %}
+  <p class="empty">No clean full applies are waiting.</p>
+{% endif %}
+
+<h2>Exceptions</h2>
+{% if exceptions %}
+  {% for item in exceptions %}
+  <article class="card queue-exception">
+    <div class="row">
+      <div>
+        <a class="ref" href="/remittances/{{ item.external_ref }}">{{ item.external_ref }}</a>
+        <span class="badge kind-{{ item.kind }}">{{ item.kind_label }}{% if item.line_count > 1 %} · {{ item.line_count }} invoices{% endif %}</span>
+      </div>
+      <div class="money">{{ item.amount | money }}</div>
+    </div>
+    <div class="meta">{{ item.channel_label }} · {{ item.payer_name or "Unknown payer" }}{% if item.payer_account %} · {{ item.payer_account }}{% endif %} · confidence {{ item.confidence }} · recommend {{ item.recommended_action }}</div>
+    <p>{{ item.route_reason }}</p>
+  </article>
+  {% endfor %}
+{% else %}
+  <p class="empty">The exception queue is clear.</p>
+{% endif %}
+
+{% if posted %}
+<h2>Posted</h2>
+{% for item in posted %}
+<article class="card queue-posted">
+  <div class="row">
+    <div>
+      <a class="ref" href="/remittances/{{ item.external_ref }}">{{ item.external_ref }}</a>
+      <span class="badge kind-{{ item.kind }}">{{ item.kind_label }}</span>
+    </div>
+    <div class="money">{{ item.amount | money }}</div>
+  </div>
+  <div class="meta">Posted by {{ item.confirmed_by }} · {{ item.confirmed_action }} · receipt {{ item.receipt.status }}</div>
+</article>
+{% endfor %}
+{% endif %}
+{% endblock %}

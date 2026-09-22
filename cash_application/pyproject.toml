@@ -1,0 +1,35 @@
+[project]
+name = "cash-application-agent"
+version = "0.1.0"
+description = "US accounts-receivable cash application agent: match lockbox, EDI 820, and short-pay remittances to open invoices"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.7",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.30"]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+cashapp = "cash_application.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["cash_application*"]
+
+[tool.setuptools.package-data]
+cash_application = ["templates/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

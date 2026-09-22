@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Cash application{% endblock %}</title>
+  <style>
+    :root {
+      --paper: #efe7d6;
+      --card: #fbf6ec;
+      --ink: #221c14;
+      --muted: #6d6254;
+      --rule: #d9cdb8;
+      --ledger: #8e2a22;
+      --green: #0e6a4c;
+      --navy: #1d3d5c;
+      --amber: #8a5410;
+      --brown: #6b4c28;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 15px/1.45 "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-end;
+      padding: 22px 28px 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+    header a { color: inherit; text-decoration: none; }
+    .brand { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ledger); font-weight: 700; }
+    h1 { font-size: 22px; font-weight: 650; margin: 2px 0 0; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 13px; }
+    main { padding: 22px 28px 48px; max-width: 1080px; }
+    h2 { font-size: 15px; margin: 22px 0 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--ledger);
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin: 0 0 10px;
+    }
+    .card a.ref { color: var(--ink); font-weight: 650; text-decoration: none; }
+    .card a.ref:hover { text-decoration: underline; }
+    .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+    .meta { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .money { font-variant-numeric: tabular-nums; font-weight: 650; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: white;
+    }
+    .kind-full { background: var(--green); }
+    .kind-short_pay { background: var(--ledger); }
+    .kind-overpay { background: var(--navy); }
+    .kind-unapplied { background: var(--brown); }
+    .queue-ready { border-left-color: var(--green); }
+    .queue-exception { border-left-color: var(--amber); }
+    .queue-posted { border-left-color: var(--navy); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    pre {
+      white-space: pre-wrap;
+      background: #f3ecdf;
+      border: 1px solid var(--rule);
+      padding: 12px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      overflow-x: auto;
+    }
+    .explain { font-size: 15.5px; }
+    .banner {
+      background: #f8e4df;
+      border: 1px solid #e3b2a8;
+      color: #6d221c;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .ok {
+      background: #e5f3ec;
+      border: 1px solid #b7dccb;
+      color: #0e4a34;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    form.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin-top: 8px; }
+    label.clerk { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+    input[type="text"], input[type="number"] {
+      font: inherit;
+      padding: 8px 10px;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: white;
+      color: var(--ink);
+      min-width: 0;
+    }
+    input.amt { width: 120px; text-align: right; font-variant-numeric: tabular-nums; }
+    button {
+      font: inherit;
+      font-weight: 650;
+      border: 0;
+      border-radius: 4px;
+      padding: 9px 12px;
+      cursor: pointer;
+      color: white;
+      background: var(--green);
+    }
+    button.secondary { background: var(--navy); }
+    button.ghost { background: var(--brown); }
+    button:hover { filter: brightness(1.08); }
+    .split { margin-top: 8px; }
+    .empty { color: var(--muted); font-style: italic; }
+    .back { color: var(--navy); text-decoration: none; font-size: 13px; }
+    @media (max-width: 720px) {
+      header, main { padding-left: 16px; padding-right: 16px; }
+      .row { align-items: flex-start; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand">Harborline Industrial Supply</div>
+      <h1><a href="/">Cash application</a></h1>
+    </div>
+    <div class="sub">Lockbox, EDI 820, and short-pay email. Nothing posts until a clerk confirms.</div>
+  </header>
+  <main>
+    {% block body %}{% endblock %}
+  </main>
+</body>
+</html>
