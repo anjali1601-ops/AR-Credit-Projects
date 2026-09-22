@@ -1,0 +1,9 @@
+.venv/
+.chroma/
+runs/
+memos/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+uv.lock

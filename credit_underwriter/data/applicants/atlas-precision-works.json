@@ -1,0 +1,171 @@
+{
+  "applicant_id": "atlas-precision-works",
+  "legal_name": "Atlas Precision Works, Inc.",
+  "trading_name": "Atlas Precision",
+  "entity_type": "C-Corporation",
+  "country": "United States",
+  "country_code": "US",
+  "industry": "Precision machining & aerospace components",
+  "industry_code": "NAICS-332710",
+  "years_in_business": 22,
+  "employees": 210,
+  "currency": "USD",
+  "requested_limit": 750000,
+  "requested_terms_days": 60,
+  "purpose": "Recurring purchases of alloy bar stock and tooling for a new aerospace program.",
+  "submitted_at": "2026-09-08",
+  "prior_relationship_months": 0,
+  "prior_worst_days_beyond_terms": null,
+  "statements": [
+    {
+      "fiscal_year": 2023,
+      "period_end": "2023-12-31",
+      "currency": "USD",
+      "opinion": "audited",
+      "income_statement": {
+        "revenue": 38900000,
+        "cost_of_goods_sold": 26050000,
+        "operating_expenses": 9050000,
+        "depreciation_amortization": 1210000,
+        "interest_expense": 445000,
+        "income_tax_expense": 495000
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 2300000,
+        "accounts_receivable": 6850000,
+        "inventory": 5700000,
+        "other_current_assets": 480000,
+        "net_property_plant_equipment": 10900000,
+        "intangible_assets": 950000,
+        "other_non_current_assets": 410000,
+        "accounts_payable": 3520000,
+        "short_term_debt": 1100000,
+        "other_current_liabilities": 1830000,
+        "long_term_debt": 6900000,
+        "other_non_current_liabilities": 940000,
+        "total_equity": 13300000
+      },
+      "cash_flow": {
+        "cash_from_operations": 3300000,
+        "capital_expenditures": 1900000,
+        "dividends_and_distributions": 60000
+      }
+    },
+    {
+      "fiscal_year": 2024,
+      "period_end": "2024-12-31",
+      "currency": "USD",
+      "opinion": "audited",
+      "income_statement": {
+        "revenue": 43100000,
+        "cost_of_goods_sold": 28450000,
+        "operating_expenses": 9720000,
+        "depreciation_amortization": 1320000,
+        "interest_expense": 410000,
+        "income_tax_expense": 735000
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 3050000,
+        "accounts_receivable": 7400000,
+        "inventory": 5950000,
+        "other_current_assets": 540000,
+        "net_property_plant_equipment": 11600000,
+        "intangible_assets": 900000,
+        "other_non_current_assets": 430000,
+        "accounts_payable": 3780000,
+        "short_term_debt": 1150000,
+        "other_current_liabilities": 1990000,
+        "long_term_debt": 6300000,
+        "other_non_current_liabilities": 980000,
+        "total_equity": 15670000
+      },
+      "cash_flow": {
+        "cash_from_operations": 4150000,
+        "capital_expenditures": 2050000,
+        "dividends_and_distributions": 95000
+      }
+    },
+    {
+      "fiscal_year": 2025,
+      "period_end": "2025-12-31",
+      "currency": "USD",
+      "opinion": "audited",
+      "income_statement": {
+        "revenue": 48200000,
+        "cost_of_goods_sold": 31330000,
+        "operating_expenses": 10600000,
+        "depreciation_amortization": 1450000,
+        "interest_expense": 385000,
+        "income_tax_expense": 1020000
+      },
+      "balance_sheet": {
+        "cash_and_equivalents": 4150000,
+        "accounts_receivable": 7900000,
+        "inventory": 6300000,
+        "other_current_assets": 620000,
+        "net_property_plant_equipment": 12400000,
+        "intangible_assets": 850000,
+        "other_non_current_assets": 460000,
+        "accounts_payable": 4050000,
+        "short_term_debt": 1200000,
+        "other_current_liabilities": 2180000,
+        "long_term_debt": 5600000,
+        "other_non_current_liabilities": 1050000,
+        "total_equity": 18600000
+      },
+      "cash_flow": {
+        "cash_from_operations": 5100000,
+        "capital_expenditures": 2300000,
+        "dividends_and_distributions": 485000
+      }
+    }
+  ],
+  "trade_references": [
+    {
+      "supplier_name": "Cordell Alloy Supply",
+      "relationship_years": 11,
+      "high_credit": 620000,
+      "terms": "Net 60",
+      "days_beyond_terms": 2,
+      "comment": "Pays within terms, no collection activity in eleven years."
+    },
+    {
+      "supplier_name": "Brightline Tooling Co.",
+      "relationship_years": 7,
+      "high_credit": 310000,
+      "terms": "Net 45",
+      "days_beyond_terms": 0,
+      "comment": "Consistently early; takes discounts."
+    },
+    {
+      "supplier_name": "Verity Industrial Coatings",
+      "relationship_years": 5,
+      "high_credit": 145000,
+      "terms": "Net 30",
+      "days_beyond_terms": 3,
+      "comment": "Occasional three-day slip around month end, otherwise clean."
+    }
+  ],
+  "customer_concentration": [
+    { "customer_name": "Kestrel Aerostructures", "percent_of_revenue": 14.0, "contract_expiry": "2029-06-30" },
+    { "customer_name": "Halden Turbine Systems", "percent_of_revenue": 11.0, "contract_expiry": "2028-03-31" },
+    { "customer_name": "Pinnacle Medical Devices", "percent_of_revenue": 9.0, "contract_expiry": "2027-12-31" },
+    { "customer_name": "Redstone Rail Components", "percent_of_revenue": 7.0, "contract_expiry": null }
+  ],
+  "credit_enhancements": [
+    {
+      "key": "atlas-collateral-ucc",
+      "kind": "collateral",
+      "description": "Equipment UCC-1 filings are limited to the existing lender; no blanket lien on receivables or inventory.",
+      "offsets_categories": ["insolvency"]
+    }
+  ],
+  "disclosures": {
+    "material_litigation": false,
+    "prior_insolvency_or_bankruptcy": false,
+    "covenant_breach_last_24m": false,
+    "tax_or_regulatory_penalties": false,
+    "change_of_control_pending": false,
+    "notes": "A 2023 employment claim was settled for an immaterial amount and is disclosed for completeness."
+  }
+}
