@@ -1,0 +1,10 @@
+account_id,name,industry,segment,relationship_start,annual_contract_value,credit_limit,payment_terms_days,late_fee_pct,contract_clause,ar_owner,contact_name,contact_email,contact_phone,archetype
+ACC-1001,Harbor Point Logistics,Freight & Logistics,mid_market,2023-12-03,186000,90000,30,1.5,MSA §7.3 (Payment Terms),Priya Raman,Dana Whitfield,dana.whitfield@harborpointlog.com,+1-503-555-0142,reliable_but_late
+ACC-1002,Cobalt Dental Group,Healthcare Services,smb,2024-07-30,64800,30000,30,1.0,Order Form §4.2 (Fees),Marcus Idowu,Renee Alvarado,renee.alvarado@cobaltdental.com,+1-312-555-0117,reliable_but_late
+ACC-1003,Ridgeway Print Co.,Commercial Printing,smb,2023-05-07,48000,25000,45,1.0,Service Agreement §5.1 (Invoicing),Priya Raman,Tom Beckett,tbeckett@ridgewayprint.com,+1-414-555-0188,reliable_but_late
+ACC-2001,Northwind Interiors,Commercial Interiors,mid_market,2024-05-01,240000,120000,30,1.5,MSA §7.3 (Payment Terms),Marcus Idowu,Gavin Mercer,g.mercer@northwindinteriors.com,+1-206-555-0164,deteriorating_avoidant
+ACC-2002,Solstice Media Labs,Marketing Technology,mid_market,2024-11-27,150000,75000,30,1.5,MSA §9.4 (Late Payment),Priya Raman,Elise Fontaine,elise@solsticemedialabs.io,+1-646-555-0133,deteriorating_avoidant
+ACC-2003,Brightline Staffing,Staffing & Recruiting,smb,2025-02-25,96000,45000,30,1.25,Order Form §4.2 (Fees),Marcus Idowu,Sam Okoro,sokoro@brightlinestaffing.com,+1-704-555-0125,deteriorating_avoidant
+ACC-3001,Apex Modular Build,Construction,mid_market,2024-01-02,310000,110000,30,1.5,MSA §11.2 (Default & Remedies),Priya Raman,Curtis Hale,c.hale@apexmodular.build,+1-713-555-0199,high_risk_delinquent
+ACC-3002,Hollowbrook Retail Group,Specialty Retail,mid_market,2024-06-30,198000,80000,45,1.5,MSA §11.2 (Default & Remedies),Marcus Idowu,Lena Pruitt,lpruitt@hollowbrookretail.com,+1-901-555-0171,high_risk_delinquent
+ACC-3003,Tidewater Freight Partners,Freight & Logistics,smb,2025-05-26,84000,35000,30,1.5,Service Agreement §8.5 (Collections),Priya Raman,Roy Stapleton,roy@tidewaterfreight.net,+1-757-555-0154,high_risk_delinquent

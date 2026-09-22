@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-09-18",
+  "seed": 20260918,
+  "accounts": 9,
+  "archetypes": [
+    "deteriorating_avoidant",
+    "high_risk_delinquent",
+    "reliable_but_late"
+  ],
+  "row_counts": {
+    "customers": 9,
+    "invoices": 139,
+    "payments": 120,
+    "promises": 18,
+    "emails": 77
+  }
+}
