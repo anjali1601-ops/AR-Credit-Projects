@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AR team lead</title>
+  <style>
+    :root {
+      --bg: #e7e1d4;
+      --paper: #fbf7f0;
+      --ink: #1c1915;
+      --muted: #5f584e;
+      --line: #d5ccbe;
+      --green: #1b6b45;
+      --gold: #8a5a10;
+      --red: #8d342c;
+      --green-bg: #e4f2ea;
+      --gold-bg: #f8efdc;
+      --red-bg: #f8e7e4;
+      --shadow: 0 1px 0 rgba(28, 25, 21, 0.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.45 "Avenir Next", "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 28px 28px 18px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: Palatino, "Iowan Old Style", Georgia, serif;
+      font-weight: 600;
+      font-size: 34px;
+      letter-spacing: -0.03em;
+      margin: 0 0 6px;
+    }
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    .rule {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--ink);
+      padding: 12px 14px;
+      margin: 16px 0 0;
+      max-width: 720px;
+    }
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto 48px;
+      padding: 0 28px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .roster { padding: 8px; }
+    .person {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      color: inherit;
+      padding: 12px;
+      cursor: pointer;
+      font: inherit;
+    }
+    .person + .person { border-top: 1px solid var(--line); }
+    .person.active { background: #fff; border-color: var(--line); }
+    .person strong { display: block; font-size: 16px; }
+    .meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
+    .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .pill {
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #efeae1;
+      color: var(--ink);
+    }
+    .pill.exceeds, .pill.engaged { background: var(--green-bg); color: var(--green); }
+    .pill.meets, .pill.strained { background: var(--gold-bg); color: var(--gold); }
+    .pill.below, .pill.withdrawing, .pill.risk { background: var(--red-bg); color: var(--red); }
+    .pill.ok { background: var(--green-bg); color: var(--green); }
+    .detail { padding: 22px 22px 28px; min-height: 420px; }
+    h2 {
+      font-family: Palatino, Georgia, serif;
+      font-size: 28px;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    h3 {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 22px 0 8px;
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .tile {
+      border: 1px solid var(--line);
+      padding: 10px;
+      background: #fff;
+    }
+    .tile b { display: block; font-size: 18px; letter-spacing: -0.02em; }
+    .tile span { color: var(--muted); font-size: 12px; }
+    blockquote {
+      margin: 0 0 10px;
+      padding: 10px 12px;
+      background: #fff;
+      border-left: 3px solid var(--line);
+    }
+    blockquote footer { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    pre {
+      white-space: pre-wrap;
+      font: inherit;
+      margin: 0;
+    }
+    .banner {
+      padding: 12px 14px;
+      margin: 14px 0;
+      border: 1px solid var(--line);
+    }
+    .banner.risk { background: var(--red-bg); border-color: #e3c2be; }
+    .banner.calm { background: var(--green-bg); border-color: #c9e2d4; }
+    .gates { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin: 0; }
+    .gates div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 6px 0; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: end;
+      margin-top: 8px;
+    }
+    label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+    input, select, button.action {
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+    }
+    button.action { cursor: pointer; background: var(--ink); color: #fbf7f0; }
+    button.action.secondary { background: #fff; color: var(--ink); }
+    button.action:disabled { opacity: 0.45; cursor: not-allowed; }
+    .error {
+      background: var(--red-bg);
+      border: 1px solid #e3c2be;
+      padding: 10px 12px;
+      margin-top: 12px;
+    }
+    .sent { font-size: 14px; color: var(--muted); }
+    .toolbar { display: flex; gap: 8px; margin-top: 14px; }
+    @media (max-width: 860px) {
+      .shell { grid-template-columns: 1fr; padding: 0 16px; }
+      header { padding: 22px 16px 12px; }
+      .tiles { grid-template-columns: 1fr 1fr; }
+      .gates { grid-template-columns: 1fr; }
+      h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="kicker">Accounts receivable and credit</p>
+    <h1>Team-lead cockpit</h1>
+    <p class="meta">Q3 2026 · Alex Okonkwo · four people on the book</p>
+    <p class="rule">Drafts stay here until you confirm the rating. Confirming does not send the review. Posting is a separate step, and the stay conversation is never included.</p>
+    <div class="toolbar">
+      <button class="action secondary" id="reset" type="button">Reset seeded quarter</button>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="panel roster" id="roster" aria-label="Team"></section>
+    <article class="panel detail" id="detail">
+      <p class="meta">Loading the quarter…</p>
+    </article>
+  </main>
+  <script>
+    const rosterEl = document.getElementById("roster");
+    const detailEl = document.getElementById("detail");
+    let selected = null;
+    let cards = [];
+
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[ch]));
+    }
+
+    function money(amount) {
+      return "$" + Number(amount).toLocaleString("en-US");
+    }
+
+    function pill(text, kind) {
+      return `<span class="pill ${esc(kind)}">${esc(text)}</span>`;
+    }
+
+    function renderRoster() {
+      rosterEl.innerHTML = cards.map((card) => {
+        const risk = card.flight_risk ? pill("Flight risk", "risk") : pill("No flight risk", "ok");
+        const rating = card.rating ? pill(card.rating, card.rating) : "";
+        const sentiment = card.sentiment ? pill(card.sentiment, card.sentiment) : "";
+        return `<button class="person ${card.teammate_id === selected ? "active" : ""}" type="button" data-id="${esc(card.teammate_id)}">
+          <strong>${esc(card.name)}</strong>
+          <div class="meta">${esc(card.role)} · ${esc(card.tenure_months)} months</div>
+          <div class="pills">${rating}${sentiment}${risk}</div>
+        </button>`;
+      }).join("");
+      rosterEl.querySelectorAll(".person").forEach((button) => {
+        button.addEventListener("click", () => openCase(button.dataset.id));
+      });
+    }
+
+    function gateRow(label, on) {
+      return `<div><span>${esc(label)}</span><b>${on ? "Yes" : "No"}</b></div>`;
+    }
+
+    function renderCase(data) {
+      const m = data.metrics;
+      const quotes = data.sentiment.evidence.map((item) => `
+        <blockquote>
+          ${esc(item.text)}
+          <footer>${item.source === "qa" ? "QA comment" : "1:1 note"} · ${esc(item.observed_on)}</footer>
+        </blockquote>`).join("");
+      const gates = data.attrition.gates;
+      const banner = data.attrition.flight_risk
+        ? `<div class="banner risk"><strong>Flight risk.</strong> The stay conversation below is for you. It is not sent to ${esc(data.name)} or to HR.</div>`
+        : `<div class="banner calm"><strong>Flight risk is not raised.</strong> No stay conversation.</div>`;
+      const stay = data.attrition.stay_conversation
+        ? `<pre>${esc(data.attrition.stay_conversation)}</pre>`
+        : `<p class="meta">Nothing to draft. A high performer who is fine, a new hire still ramping, or a below-standard review without the burnout gates does not get a stay script.</p>`;
+      const sent = data.transmissions.length
+        ? data.transmissions.map((item) => `Sent ${esc(item.rating)} to ${esc(item.destination)}`).join(" · ")
+        : "Nothing sent.";
+      const confirmed = data.confirmed_rating
+        ? `Confirmed ${esc(data.confirmed_rating)} by ${esc(data.confirmed_by)}.`
+        : "Rating not confirmed.";
+      detailEl.innerHTML = `
+        <p class="meta">${esc(data.scenario_label)} · ${esc(data.period)}</p>
+        <h2>${esc(data.name)}</h2>
+        <p class="meta">${esc(data.role)} · ${esc(data.tenure_months)} months on the team</p>
+        ${banner}
+        <h3>Quarter figures</h3>
+        <div class="tiles">
+          <div class="tile"><b>${esc(money(m.cash_applied))}</b><span>Cash applied · ${esc(m.bands.cash_applied)} · bar ${esc(money(m.cash_target))}</span></div>
+          <div class="tile"><b>${esc(m.promises_kept)} of ${esc(m.promises_made)}</b><span>Promises kept · ${esc(m.bands.promises_kept)}</span></div>
+          <div class="tile"><b>${Number(m.dispute_cycle_days).toFixed(1)} days</b><span>Dispute cycle · ${esc(m.bands.dispute_cycle)}</span></div>
+          <div class="tile"><b>${Number(m.quality_score).toFixed(1)}</b><span>Quality · ${esc(m.bands.quality)}</span></div>
+          <div class="tile"><b>${esc(m.cases_closed)} cases</b><span>Workload · ${Number(m.average_weekly_overtime).toFixed(1)}h overtime</span></div>
+        </div>
+        <h3>Relationship with the work</h3>
+        <p>${pill(data.sentiment.label, data.sentiment.label)}</p>
+        <p>${esc(data.sentiment.summary)}</p>
+        ${quotes}
+        <h3>Review draft · system rating ${esc(data.performance.rating)}</h3>
+        <pre>${esc(data.performance.narrative)}</pre>
+        <h3>Coaching</h3>
+        <pre>${esc(data.coaching)}</pre>
+        <h3>Why attrition did or did not flag</h3>
+        <div class="gates">
+          ${gateRow("Strained or withdrawing", gates.adverse_sentiment)}
+          ${gateRow("Still delivering (meets or exceeds)", gates.solid_performer)}
+          ${gateRow("Tenure at least 12 months", gates.tenured)}
+          ${gateRow("Sustained overtime", gates.sustained_overtime)}
+        </div>
+        <h3>Stay conversation</h3>
+        ${stay}
+        <h3>Confirm, then send</h3>
+        <p class="sent">${esc(confirmed)} ${esc(sent)}</p>
+        <form class="actions" id="confirm-form">
+          <label>Rating you confirm
+            <select name="rating">
+              <option value="exceeds">exceeds</option>
+              <option value="meets">meets</option>
+              <option value="below">below</option>
+            </select>
+          </label>
+          <label>Your name
+            <input name="manager" value="Alex Okonkwo" required>
+          </label>
+          <button class="action" type="submit">Confirm rating</button>
+          <button class="action secondary" type="button" id="post-hr" ${data.confirmed_rating ? "" : "disabled"}>Post to HR</button>
+          <button class="action secondary" type="button" id="post-employee" ${data.confirmed_rating ? "" : "disabled"}>Post to employee</button>
+          <button class="action secondary" type="button" id="rerun">Run draft again</button>
+        </form>
+        <div id="error"></div>
+      `;
+      detailEl.querySelector("select").value = data.confirmed_rating || data.performance.rating;
+      detailEl.querySelector("#confirm-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.target);
+        await send(`/api/team/${data.teammate_id}/confirm`, {
+          rating: form.get("rating"),
+          manager: form.get("manager")
+        });
+      });
+      detailEl.querySelector("#post-hr").addEventListener("click", () => {
+        send(`/api/team/${data.teammate_id}/post`, { destination: "hr" });
+      });
+      detailEl.querySelector("#post-employee").addEventListener("click", () => {
+        send(`/api/team/${data.teammate_id}/post`, { destination: "employee" });
+      });
+      detailEl.querySelector("#rerun").addEventListener("click", async () => {
+        await send(`/api/team/${data.teammate_id}/run`, {});
+      });
+    }
+
+    function showError(message) {
+      const slot = document.getElementById("error");
+      if (slot) slot.innerHTML = `<div class="error" role="alert">${esc(message)}</div>`;
+    }
+
+    async function send(url, body) {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        showError(payload.detail || "The cockpit refused that action.");
+        return;
+      }
+      await refresh(selected);
+    }
+
+    async function openCase(id) {
+      selected = id;
+      renderRoster();
+      detailEl.innerHTML = `<p class="meta">Opening ${esc(id)}…</p>`;
+      const response = await fetch(`/api/team/${id}`);
+      if (!response.ok) {
+        detailEl.innerHTML = `<div class="error">No draft for ${esc(id)} yet.</div>`;
+        return;
+      }
+      renderCase(await response.json());
+    }
+
+    async function refresh(keep) {
+      const response = await fetch("/api/team");
+      cards = await response.json();
+      if (!cards.length) {
+        rosterEl.innerHTML = "";
+        detailEl.innerHTML = `<p>No teammates seeded.</p>`;
+        return;
+      }
+      selected = keep && cards.some((card) => card.teammate_id === keep) ? keep : cards[0].teammate_id;
+      renderRoster();
+      await openCase(selected);
+    }
+
+    document.getElementById("reset").addEventListener("click", async () => {
+      detailEl.innerHTML = `<p class="meta">Reseeding the quarter…</p>`;
+      const response = await fetch("/api/reset", { method: "POST" });
+      if (!response.ok) {
+        showError("Reset failed.");
+        return;
+      }
+      await refresh(selected);
+    });
+
+    refresh(null);
+  </script>
+</body>
+</html>

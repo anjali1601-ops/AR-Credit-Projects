@@ -1,0 +1,33 @@
+[project]
+name = "team-lead-cockpit"
+version = "0.1.0"
+description = "AR team-lead cockpit for coaching, performance reviews, and stay conversations"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "pydantic>=2.5",
+    "typer>=0.12",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.30"]
+dev = ["pytest>=8.0", "httpx>=0.27"]
+
+[project.scripts]
+team-lead = "team_lead.cli:app"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+team_lead = ["static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
